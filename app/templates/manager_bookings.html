@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Bookings Monitoring - Fleet Manager{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Reservations & Bookings Monitoring</h1>
+    <p class="page-subtitle">Executive oversight of all booking contracts, dates, and financial balances (Read-Only).</p>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body" style="padding: 0;">
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Customer</th>
+            <th>Vehicle Model</th>
+            <th>Rental Window</th>
+            <th>Booking Status</th>
+            <th>Total Amount</th>
+            <th>Pending Balance</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for b in bookings %}
+            <tr>
+              <td><strong>#{{ b.bkid }}</strong></td>
+              <td><strong>{{ b.cust_name }}</strong></td>
+              <td>{{ b.model }}</td>
+              <td>{{ b.sdt|format_date }} → {{ b.edt|format_date }}</td>
+              <td>
+                <span class="badge badge-{{ b.status.lower() }}">{{ b.status }}</span>
+              </td>
+              <td>{{ b.total|format_currency }}</td>
+              <td>
+                {% if b.bal > 0 %}
+                  <strong style="color: #b91c1c;">{{ b.bal|format_currency }}</strong>
+                {% else %}
+                  <span style="color: #15803d;">Settled</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

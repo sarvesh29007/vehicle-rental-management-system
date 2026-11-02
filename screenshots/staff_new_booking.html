@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Reservation - Staff Desk</title>
+  <link rel="stylesheet" href="c:/sarvesh/placement preparations/projects/ganti1/vehicle_rental/app/static/style.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <h2>🚗 RentalCore</h2>
+        <div class="tagline">Enterprise Vehicle Fleet</div>
+      </div>
+
+      <nav class="sidebar-nav">
+        
+          <div class="nav-section-title">Desk Operations</div>
+          <a href="/staff" class="nav-link ">
+            <span>📊</span> Dashboard
+          </a>
+          <a href="/staff/new-booking" class="nav-link active">
+            <span>➕</span> New Booking
+          </a>
+          <a href="/staff/bookings" class="nav-link ">
+            <span>📑</span> Bookings
+          </a>
+          <a href="/staff/customers" class="nav-link ">
+            <span>👥</span> Customers
+          </a>
+          <a href="/staff/vehicles" class="nav-link ">
+            <span>🚘</span> Vehicles
+          </a>
+          <a href="/staff/payments" class="nav-link ">
+            <span>💳</span> Payments
+          </a>
+        
+
+        <div class="nav-section-title">Database Schema</div>
+        <a href="/tables" class="nav-link ">
+          <span>🗄️</span> Database Tables
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div>Oracle Database Free</div>
+        <div style="font-size: 0.72rem; color: #64748b; margin-top: 2px;">PL/SQL Business Rules</div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+      <!-- TOP HEADER -->
+      <header class="app-header">
+        <div class="header-left">
+          
+            <span class="portal-badge staff">Branch Staff Desk</span>
+          
+        </div>
+
+        <div class="header-right">
+          <div class="user-info">
+            <span class="user-name">Branch Staff</span>
+            <span class="user-role-label">Staff Role</span>
+          </div>
+          <a href="/logout" class="btn-logout">Sign Out</a>
+        </div>
+      </header>
+
+      <!-- PAGE BODY -->
+      <div class="page-container">
+        <!-- FLASH NOTIFICATIONS -->
+        
+          
+            <div class="alert-container">
+              
+                <div class="alert alert-info">
+                  <div>
+                    <strong>
+                      ℹ️ Info:
+                      
+                    </strong>
+                    You have been logged out successfully.
+                  </div>
+                </div>
+              
+                <div class="alert alert-success">
+                  <div>
+                    <strong>
+                      ✓ Success:
+                      
+                    </strong>
+                    Welcome back, Branch Staff!
+                  </div>
+                </div>
+              
+            </div>
+          
+        
+
+        
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Create New Booking</h1>
+    <p class="page-subtitle">Calls PL/SQL procedure <code>p_book</code> which invokes <code>f_avail</code> and trigger <code>trg_bk_bi</code>.</p>
+  </div>
+  <a href="/staff/bookings" class="btn btn-secondary">← Back to Bookings</a>
+</div>
+
+<div class="card" style="max-width: 800px; margin: 0 auto;">
+  <div class="card-header">
+    <h3 class="card-title">Booking Details</h3>
+  </div>
+  <div class="card-body">
+    <form id="bookingForm" method="POST" action="/staff/new-booking">
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label" for="custid">Customer <span class="required-star">*</span></label>
+          <select class="form-control" id="custid" name="custid" required>
+            <option value="">-- Select Customer --</option>
+            
+              <option value="8">Anita Joseph (9840011008) - Bangalore</option>
+            
+              <option value="1">Arun Kumar (9840011001) - Chennai</option>
+            
+              <option value="4">Divya Nair (9840011004) - Kochi</option>
+            
+              <option value="3">Karthik Raj (9840011003) - Coimbatore</option>
+            
+              <option value="10">Lakshmi Iyer (9840011010) - Salem</option>
+            
+              <option value="5">Mohammed Irfan (9840011005) - Madurai</option>
+            
+              <option value="2">Priya Sharma (9840011002) - Vellore</option>
+            
+              <option value="9">Rahul Verma (9840011009) - Pune</option>
+            
+              <option value="6">Sneha Reddy (9840011006) - Hyderabad</option>
+            
+              <option value="7">Vignesh S (9840011007) - Trichy</option>
+            
+          </select>
+          <span class="form-hint">Or <a href="/staff/customers">add a new customer</a> first</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="vid">Vehicle (Available Fleet) <span class="required-star">*</span></label>
+          <select class="form-control" id="vid" name="vid" required onchange="calculateEstimate()">
+            <option value="" data-rate="0">-- Select Vehicle --</option>
+            
+              <option value="6" data-rate="400.0" data-model="Activa">
+                Activa (TN45JK5006) - Scooter @ Rs. 400.0/day [Trichy]
+              </option>
+            
+              <option value="4" data-rate="5000.0" data-model="BMW 3 Series">
+                BMW 3 Series (TN38EF3004) - Luxury @ Rs. 5000.0/day [Coimbatore]
+              </option>
+            
+              <option value="7" data-rate="3000.0" data-model="Force Traveller">
+                Force Traveller (TN30LM6007) - Van @ Rs. 3000.0/day [Salem]
+              </option>
+            
+              <option value="2" data-rate="1800.0" data-model="Honda City">
+                Honda City (TN01AB1002) - Sedan @ Rs. 1800.0/day [Chennai]
+              </option>
+            
+              <option value="8" data-rate="2800.0" data-model="Innova">
+                Innova (KA03NP7008) - MUV @ Rs. 2800.0/day [Bangalore]
+              </option>
+            
+              <option value="9" data-rate="2200.0" data-model="Nexon EV">
+                Nexon EV (TS09QR8009) - Electric @ Rs. 2200.0/day [Hyderabad]
+              </option>
+            
+              <option value="5" data-rate="500.0" data-model="Royal Enfield">
+                Royal Enfield (TN58GH4005) - Bike @ Rs. 500.0/day [Madurai]
+              </option>
+            
+              <option value="1" data-rate="1200.0" data-model="Swift">
+                Swift (TN01AB1001) - Hatchback @ Rs. 1200.0/day [Chennai]
+              </option>
+            
+          </select>
+          <span class="form-hint">Vehicles in SERVICE or RENTED are excluded</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="sdt">Rental Start Date <span class="required-star">*</span></label>
+          <input type="date" class="form-control" id="sdt" name="sdt" required onchange="calculateEstimate()">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="edt">Rental Return Date <span class="required-star">*</span></label>
+          <input type="date" class="form-control" id="edt" name="edt" required onchange="calculateEstimate()">
+          <span class="form-hint">Must be strictly after start date (constraint <code>ck_dt</code>)</span>
+        </div>
+      </div>
+
+      <!-- ESTIMATION DISPLAY (Display only; actual total is computed by trg_bk_bi in database) -->
+      <div class="estimation-card">
+        <div>
+          <div class="estimation-label">Estimated Rental Cost (Days × Daily Rate)</div>
+          <div style="font-size: 0.8rem; color: #64748b; margin-top: 2px;">
+            Calculated automatically in the database via <code>trg_bk_bi</code> upon submission
+          </div>
+        </div>
+        <div class="estimation-val" id="estimateBox">Rs. 0</div>
+      </div>
+
+      <div class="form-actions">
+        <a href="/staff/bookings" class="btn btn-secondary">Cancel</a>
+        <button type="submit" id="submitBtn" class="btn btn-primary">
+          Confirm Reservation (p_book)
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+      </div>
+    </main>
+  </div>
+  
+<script>
+function calculateEstimate() {
+  const vidSelect = document.getElementById('vid');
+  const sdtInput = document.getElementById('sdt');
+  const edtInput = document.getElementById('edt');
+  const estimateBox = document.getElementById('estimateBox');
+
+  const selectedOpt = vidSelect.options[vidSelect.selectedIndex];
+  const rate = parseFloat(selectedOpt.getAttribute('data-rate')) || 0;
+
+  if (!sdtInput.value || !edtInput.value || rate === 0) {
+    estimateBox.innerText = 'Rs. 0';
+    return;
+  }
+
+  const start = new Date(sdtInput.value);
+  const end = new Date(edtInput.value);
+
+  const diffTime = end.getTime() - start.getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+  if (diffDays > 0) {
+    const total = diffDays * rate;
+    estimateBox.innerText = 'Rs. ' + total.toLocaleString('en-IN') + ' (' + diffDays + ' day' + (diffDays > 1 ? 's' : '') + ')';
+  } else {
+    estimateBox.innerText = 'Invalid Dates (Return must be after start)';
+  }
+}
+
+document.getElementById('bookingForm').addEventListener('submit', function() {
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.innerText = 'Processing via Oracle PL/SQL...';
+});
+</script>
+
+</body>
+</html>

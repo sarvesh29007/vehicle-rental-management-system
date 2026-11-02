@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Maintenance & Fleet Servicing - Fleet Manager{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Fleet Maintenance Logs</h1>
+    <p class="page-subtitle">Track servicing expenses, repair work, and cumulative vehicle wear.</p>
+  </div>
+</div>
+
+<!-- MAINTENANCE EXPENSE SUMMARY CARDS -->
+<div class="card-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+  <div class="stat-card stat-danger">
+    <div class="stat-title">Total Maintenance Expenditure</div>
+    <div class="stat-value">{{ total_cost|format_currency }}</div>
+    <div class="stat-desc">Cumulative cost across all vehicles</div>
+  </div>
+  <div class="stat-card stat-warning">
+    <div class="stat-title">Total Servicing Events</div>
+    <div class="stat-value">{{ records|length }}</div>
+    <div class="stat-desc">Workshop job card entries</div>
+  </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+  <!-- COST PER VEHICLE -->
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Cumulative Cost per Vehicle</h3>
+      <span style="font-size: 0.8rem; color: #64748b;">Ranked Highest First</span>
+    </div>
+    <div class="card-body" style="padding: 0;">
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Vehicle</th>
+              <th>Registration</th>
+              <th>Events</th>
+              <th>Total Cost</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for vs in vehicle_summary %}
+              <tr>
+                <td><strong>{{ vs.model }}</strong></td>
+                <td><code>{{ vs.reg_no }}</code></td>
+                <td>{{ vs.service_count }}</td>
+                <td><strong>{{ vs.total_cost|format_currency }}</strong></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- INDIVIDUAL SERVICE RECORDS -->
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Recent Service Job Cards</h3>
+      <span style="font-size: 0.8rem; color: #64748b;">Chronological</span>
+    </div>
+    <div class="card-body" style="padding: 0;">
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Date</th>
+              <th>Vehicle</th>
+              <th>Description</th>
+              <th>Cost</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for r in records %}
+              <tr>
+                <td><strong>#{{ r.mid }}</strong></td>
+                <td>{{ r.mdt|format_date }}</td>
+                <td>{{ r.model }}</td>
+                <td>{{ r.descr }}</td>
+                <td><strong>{{ r.cost|format_currency }}</strong></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

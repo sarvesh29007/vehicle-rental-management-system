@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}Executive Analytics - Fleet Manager{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Executive Analytics Dashboard</h1>
+    <p class="page-subtitle">High-level financial summaries, operational yield, and fleet distribution.</p>
+  </div>
+  <a href="{{ url_for('manager_dues') }}" class="btn btn-primary">
+    <span>💰</span> Open Dues Cursor Report
+  </a>
+</div>
+
+<!-- HEADLINE STAT CARDS -->
+<div class="card-grid">
+  <div class="stat-card stat-success">
+    <div class="stat-title">Total Revenue</div>
+    <div class="stat-value">{{ revenue|format_currency }}</div>
+    <div class="stat-desc">Cumulative payments settled</div>
+  </div>
+
+  <div class="stat-card stat-danger">
+    <div class="stat-title">Total Pending Dues</div>
+    <div class="stat-value">{{ dues|format_currency }}</div>
+    <div class="stat-desc">Outstanding customer balances (f_bal)</div>
+  </div>
+
+  <div class="stat-card stat-warning">
+    <div class="stat-title">Maintenance Cost</div>
+    <div class="stat-value">{{ maintenance|format_currency }}</div>
+    <div class="stat-desc">Fleet repair and servicing expense</div>
+  </div>
+
+  <div class="stat-card stat-info">
+    <div class="stat-title">Vehicles on Rent</div>
+    <div class="stat-value">{{ rented }} / {{ fleet.total_vehicles if fleet else 10 }}</div>
+    <div class="stat-desc">Active commercial utilization</div>
+  </div>
+</div>
+
+<!-- ANALYTICS CHARTS SECTION (Pure CSS Bar Charts) -->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 28px;">
+  <!-- REVENUE BY CATEGORY -->
+  <div class="card" style="margin-bottom: 0;">
+    <div class="card-header">
+      <h3 class="card-title">Revenue by Vehicle Category</h3>
+      <span style="font-size: 0.8rem; color: #64748b;">Sorted by Total Yield</span>
+    </div>
+    <div class="card-body">
+      {% for cat in cat_revenue %}
+        <div class="analytics-bar-item">
+          <div class="bar-header">
+            <span>{{ cat.cname }} ({{ cat.trips }} trip{{ 's' if cat.trips != 1 else '' }})</span>
+            <strong>{{ cat.rev|format_currency }}</strong>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width: {{ cat.pct }}%;"></div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- PAYMENTS BY MODE & FLEET SUMMARY -->
+  <div style="display: flex; flex-direction: column; gap: 24px;">
+    <!-- PAYMENTS BY MODE -->
+    <div class="card" style="margin-bottom: 0;">
+      <div class="card-header">
+        <h3 class="card-title">Payments by Mode</h3>
+        <span style="font-size: 0.8rem; color: #64748b;">Collections breakdown</span>
+      </div>
+      <div class="card-body">
+        {% for m in mode_payments %}
+          <div class="analytics-bar-item">
+            <div class="bar-header">
+              <span>{{ m.pmode }} ({{ m.count }} transaction{{ 's' if m.count != 1 else '' }})</span>
+              <strong>{{ m.total|format_currency }}</strong>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill bar-alt" style="width: {{ m.pct }}%;"></div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- FLEET STATUS SUMMARY -->
+    <div class="card" style="margin-bottom: 0;">
+      <div class="card-header">
+        <h3 class="card-title">Fleet Status Summary</h3>
+        <span style="font-size: 0.8rem; color: #64748b;">{{ fleet.total_vehicles if fleet else 10 }} Total Assets</span>
+      </div>
+      <div class="card-body">
+        <div style="display: flex; gap: 12px; justify-content: space-around; text-align: center;">
+          <div style="padding: 12px 16px; background-color: var(--status-available-bg); border-radius: var(--radius-sm); flex: 1;">
+            <div style="font-size: 1.5rem; font-weight: 700; color: var(--status-available-text);">
+              {{ fleet.available if fleet else 0 }}
+            </div>
+            <div style="font-size: 0.76rem; font-weight: 600; text-transform: uppercase; color: var(--status-available-text);">
+              Available
+            </div>
+          </div>
+
+          <div style="padding: 12px 16px; background-color: var(--status-rented-bg); border-radius: var(--radius-sm); flex: 1;">
+            <div style="font-size: 1.5rem; font-weight: 700; color: var(--status-rented-text);">
+              {{ fleet.rented if fleet else 0 }}
+            </div>
+            <div style="font-size: 0.76rem; font-weight: 600; text-transform: uppercase; color: var(--status-rented-text);">
+              On Rent
+            </div>
+          </div>
+
+          <div style="padding: 12px 16px; background-color: var(--status-service-bg); border-radius: var(--radius-sm); flex: 1;">
+            <div style="font-size: 1.5rem; font-weight: 700; color: var(--status-service-text);">
+              {{ fleet.service if fleet else 0 }}
+            </div>
+            <div style="font-size: 0.76rem; font-weight: 600; text-transform: uppercase; color: var(--status-service-text);">
+              In Service
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

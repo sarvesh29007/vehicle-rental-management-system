@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Vehicle Rental System</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="login-body">
+  <div class="login-card">
+    <div class="login-header">
+      <div style="font-size: 2.2rem; margin-bottom: 8px;">🚗</div>
+      <h1>Vehicle Rental System</h1>
+      <p>Oracle PL/SQL Enterprise Back-End</p>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="alert-container" style="margin-bottom: 20px;">
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category if category != 'error' else 'error' }}">
+              <div>{{ message }}</div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('login') }}">
+      <div class="form-group">
+        <label class="form-label" for="role">Select Portal Role <span class="required-star">*</span></label>
+        <select class="form-control" id="role" name="role" required>
+          <option value="staff">Branch Staff Desk (/staff)</option>
+          <option value="manager">Manager Portal (/manager)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="username">Username <span class="required-star">*</span></label>
+        <input type="text" class="form-control" id="username" name="username" placeholder="e.g. staff or manager" required autofocus>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="password">Password <span class="required-star">*</span></label>
+        <input type="password" class="form-control" id="password" name="password" placeholder="••••••••" required>
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; margin-top: 10px; font-size: 1rem;">
+        Authenticate & Sign In
+      </button>
+    </form>
+
+    <div class="demo-credentials-box">
+      <strong>Demo Accounts:</strong><br>
+      • <strong>Staff:</strong> staff / <code>staff123</code> (Role: Branch Staff)<br>
+      • <strong>Manager:</strong> manager / <code>manager123</code> (Role: Manager)
+    </div>
+  </div>
+</body>
+</html>

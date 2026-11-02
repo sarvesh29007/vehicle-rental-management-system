@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Vehicles Monitoring - Fleet Manager{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Fleet Monitoring Directory</h1>
+    <p class="page-subtitle">Executive overview of vehicle assets, categories, and active operational status (Read-Only).</p>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body" style="padding: 0;">
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Model</th>
+            <th>Registration</th>
+            <th>Category</th>
+            <th>Rate / Day</th>
+            <th>Home Branch</th>
+            <th>Year</th>
+            <th>Live Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for v in vehicles %}
+            <tr>
+              <td><strong>#{{ v.vid }}</strong></td>
+              <td><strong>{{ v.model }}</strong></td>
+              <td><code>{{ v.reg_no }}</code></td>
+              <td>{{ v.category }}</td>
+              <td><strong>{{ v.rate|format_currency }}</strong></td>
+              <td>{{ v.branch }} ({{ v.branch_city }})</td>
+              <td>{{ v.yr }}</td>
+              <td>
+                <span class="badge badge-{{ v.status.lower() }}">{{ v.status }}</span>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

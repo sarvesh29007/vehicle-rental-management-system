@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Staff Dashboard - Vehicle Rental System</title>
+  <link rel="stylesheet" href="c:/sarvesh/placement preparations/projects/ganti1/vehicle_rental/app/static/style.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <h2>🚗 RentalCore</h2>
+        <div class="tagline">Enterprise Vehicle Fleet</div>
+      </div>
+
+      <nav class="sidebar-nav">
+        
+          <div class="nav-section-title">Desk Operations</div>
+          <a href="/staff" class="nav-link active">
+            <span>📊</span> Dashboard
+          </a>
+          <a href="/staff/new-booking" class="nav-link ">
+            <span>➕</span> New Booking
+          </a>
+          <a href="/staff/bookings" class="nav-link ">
+            <span>📑</span> Bookings
+          </a>
+          <a href="/staff/customers" class="nav-link ">
+            <span>👥</span> Customers
+          </a>
+          <a href="/staff/vehicles" class="nav-link ">
+            <span>🚘</span> Vehicles
+          </a>
+          <a href="/staff/payments" class="nav-link ">
+            <span>💳</span> Payments
+          </a>
+        
+
+        <div class="nav-section-title">Database Schema</div>
+        <a href="/tables" class="nav-link ">
+          <span>🗄️</span> Database Tables
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div>Oracle Database Free</div>
+        <div style="font-size: 0.72rem; color: #64748b; margin-top: 2px;">PL/SQL Business Rules</div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+      <!-- TOP HEADER -->
+      <header class="app-header">
+        <div class="header-left">
+          
+            <span class="portal-badge staff">Branch Staff Desk</span>
+          
+        </div>
+
+        <div class="header-right">
+          <div class="user-info">
+            <span class="user-name">Branch Staff</span>
+            <span class="user-role-label">Staff Role</span>
+          </div>
+          <a href="/logout" class="btn-logout">Sign Out</a>
+        </div>
+      </header>
+
+      <!-- PAGE BODY -->
+      <div class="page-container">
+        <!-- FLASH NOTIFICATIONS -->
+        
+          
+            <div class="alert-container">
+              
+                <div class="alert alert-info">
+                  <div>
+                    <strong>
+                      ℹ️ Info:
+                      
+                    </strong>
+                    You have been logged out successfully.
+                  </div>
+                </div>
+              
+                <div class="alert alert-success">
+                  <div>
+                    <strong>
+                      ✓ Success:
+                      
+                    </strong>
+                    Welcome back, Branch Staff!
+                  </div>
+                </div>
+              
+            </div>
+          
+        
+
+        
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Branch Desk Dashboard</h1>
+    <p class="page-subtitle">Real-time fleet status, active handovers, and collection summaries.</p>
+  </div>
+  <a href="/staff/new-booking" class="btn btn-primary">
+    <span>➕</span> New Reservation
+  </a>
+</div>
+
+<!-- STAT CARDS -->
+<div class="card-grid">
+  <div class="stat-card stat-success">
+    <div class="stat-title">Available Fleet</div>
+    <div class="stat-value">8</div>
+    <div class="stat-desc">Vehicles ready for rental</div>
+  </div>
+
+  <div class="stat-card stat-warning">
+    <div class="stat-title">Vehicles on Rent</div>
+    <div class="stat-value">1</div>
+    <div class="stat-desc">Currently with active customers</div>
+  </div>
+
+  <div class="stat-card stat-danger">
+    <div class="stat-title">Under Service</div>
+    <div class="stat-value">1</div>
+    <div class="stat-desc">Maintenance & repair bay</div>
+  </div>
+
+  <div class="stat-card stat-info">
+    <div class="stat-title">Pending Collections</div>
+    <div class="stat-value">Rs. 12,800</div>
+    <div class="stat-desc">Outstanding customer balances</div>
+  </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 28px;">
+  <!-- BOOKINGS WAITING FOR HANDOVER -->
+  <div class="card" style="margin-bottom: 0;">
+    <div class="card-header">
+      <h3 class="card-title">Bookings Waiting for Handover</h3>
+      <span class="badge badge-booked">2 BOOKED</span>
+    </div>
+    <div class="card-body" style="padding: 16px;">
+      <p style="font-size: 0.88rem; color: #64748b; margin-bottom: 12px;">
+        Customers with approved bookings ready to pick up their vehicles.
+      </p>
+      <a href="/staff/bookings?tab=BOOKED" class="btn btn-secondary btn-sm">
+        View Waiting Bookings & Hand Over →
+      </a>
+    </div>
+  </div>
+
+  <!-- VEHICLES OUT WITH RETURN DATES -->
+  <div class="card" style="margin-bottom: 0;">
+    <div class="card-header">
+      <h3 class="card-title">Vehicles Currently Out</h3>
+      <span class="badge badge-rented">1 ACTIVE</span>
+    </div>
+    <div class="card-body" style="padding: 0;">
+      
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Booking</th>
+                <th>Customer</th>
+                <th>Vehicle</th>
+                <th>Return Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td><strong>#11</strong></td>
+                  <td>Arun Kumar</td>
+                  <td>Creta (TN32CD2003)</td>
+                  <td>15 Oct 2026</td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<!-- LATEST 5 BOOKINGS TABLE -->
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">Latest 5 Bookings</h3>
+    <a href="/staff/bookings" class="btn btn-secondary btn-sm">All Bookings</a>
+  </div>
+  <div class="card-body" style="padding: 0;">
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Customer</th>
+            <th>Vehicle</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Status</th>
+            <th>Total</th>
+            <th>Pending</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+            <tr>
+              <td><strong>#13</strong></td>
+              <td>Arun Kumar</td>
+              <td>Swift</td>
+              <td>10 Nov 2026</td>
+              <td>12 Nov 2026</td>
+              <td>
+                <span class="badge badge-booked">BOOKED</span>
+              </td>
+              <td>Rs. 2,400</td>
+              <td>
+                
+                  <strong style="color: #b91c1c;">Rs. 2,400</strong>
+                
+              </td>
+            </tr>
+          
+            <tr>
+              <td><strong>#12</strong></td>
+              <td>Priya Sharma</td>
+              <td>Honda City</td>
+              <td>20 Oct 2026</td>
+              <td>23 Oct 2026</td>
+              <td>
+                <span class="badge badge-booked">BOOKED</span>
+              </td>
+              <td>Rs. 5,400</td>
+              <td>
+                
+                  <strong style="color: #b91c1c;">Rs. 5,400</strong>
+                
+              </td>
+            </tr>
+          
+            <tr>
+              <td><strong>#11</strong></td>
+              <td>Arun Kumar</td>
+              <td>Creta</td>
+              <td>11 Oct 2026</td>
+              <td>15 Oct 2026</td>
+              <td>
+                <span class="badge badge-active">ACTIVE</span>
+              </td>
+              <td>Rs. 10,000</td>
+              <td>
+                
+                  <strong style="color: #b91c1c;">Rs. 5,000</strong>
+                
+              </td>
+            </tr>
+          
+            <tr>
+              <td><strong>#10</strong></td>
+              <td>Lakshmi Iyer</td>
+              <td>Swift</td>
+              <td>05 Oct 2026</td>
+              <td>09 Oct 2026</td>
+              <td>
+                <span class="badge badge-returned">RETURNED</span>
+              </td>
+              <td>Rs. 4,800</td>
+              <td>
+                
+                  <span style="color: #15803d;">Paid</span>
+                
+              </td>
+            </tr>
+          
+            <tr>
+              <td><strong>#9</strong></td>
+              <td>Rahul Verma</td>
+              <td>Force Traveller</td>
+              <td>20 Sep 2026</td>
+              <td>24 Sep 2026</td>
+              <td>
+                <span class="badge badge-returned">RETURNED</span>
+              </td>
+              <td>Rs. 12,000</td>
+              <td>
+                
+                  <span style="color: #15803d;">Paid</span>
+                
+              </td>
+            </tr>
+          
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+      </div>
+    </main>
+  </div>
+  
+</body>
+</html>

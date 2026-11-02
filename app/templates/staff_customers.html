@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+{% block title %}Customers - Staff Desk{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Customer Directory</h1>
+    <p class="page-subtitle">Add new customers (INSERT), update contact records (UPDATE), or delete accounts (DELETE demonstration).</p>
+  </div>
+  <button type="button" class="btn btn-primary" onclick="openAddModal()">
+    <span>➕</span> Add Customer
+  </button>
+</div>
+
+<!-- CUSTOMER TABLE -->
+<div class="card">
+  <div class="card-body" style="padding: 0;">
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Full Name</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>License Number</th>
+            <th>City</th>
+            <th>Bookings</th>
+            <th style="text-align: right;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for c in customers %}
+            <tr>
+              <td><strong>#{{ c.custid }}</strong></td>
+              <td><strong>{{ c.name }}</strong></td>
+              <td>{{ c.phone }}</td>
+              <td>{{ c.email or '-' }}</td>
+              <td><code>{{ c.lic_no }}</code></td>
+              <td>{{ c.city }}</td>
+              <td>
+                <span class="badge badge-booked">{{ c.total_bookings }} booking{{ 's' if c.total_bookings != 1 else '' }}</span>
+              </td>
+              <td style="text-align: right;">
+                <div class="btn-group" style="justify-content: flex-end;">
+                  <button type="button" class="btn btn-secondary btn-sm" onclick="openEditModal({{ c.custid }}, '{{ c.name }}', '{{ c.phone }}', '{{ c.email or '' }}', '{{ c.lic_no }}', '{{ c.city }}')">
+                    ✏️ Edit
+                  </button>
+                  <form method="POST" action="{{ url_for('staff_customer_delete', custid=c.custid) }}" onsubmit="return confirm('Are you sure you want to delete customer {{ c.name }}? If they have existing bookings, the database constraint will block this action.');">
+                    <button type="submit" class="btn btn-danger btn-sm">🗑️ Delete</button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+          {% else %}
+            <tr>
+              <td colspan="8" style="text-align: center; color: #94a3b8; padding: 24px;">No customers found.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ADD CUSTOMER MODAL -->
+<div class="modal-overlay" id="addModal">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <h3 class="card-title">Add New Customer</h3>
+      <button type="button" class="btn btn-secondary btn-sm" onclick="closeAddModal()">✕</button>
+    </div>
+    <form method="POST" action="{{ url_for('staff_customers') }}">
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label" for="add_name">Full Name <span class="required-star">*</span></label>
+          <input type="text" class="form-control" id="add_name" name="name" required placeholder="e.g. Anand Kumar">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="add_phone">Phone (10 digits) <span class="required-star">*</span></label>
+          <input type="tel" pattern="[0-9]{10}" class="form-control" id="add_phone" name="phone" required placeholder="e.g. 9840011999">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="add_email">Email Address</label>
+          <input type="email" class="form-control" id="add_email" name="email" placeholder="e.g. anand@mail.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="add_lic_no">Driving License No. <span class="required-star">*</span></label>
+          <input type="text" class="form-control" id="add_lic_no" name="lic_no" required placeholder="e.g. DL-TN-9999">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="add_city">City</label>
+          <input type="text" class="form-control" id="add_city" name="city" value="Chennai" placeholder="Default: Chennai">
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" onclick="closeAddModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Customer</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- EDIT CUSTOMER MODAL -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <h3 class="card-title">Edit Customer Record</h3>
+      <button type="button" class="btn btn-secondary btn-sm" onclick="closeEditModal()">✕</button>
+    </div>
+    <form id="editForm" method="POST" action="">
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label" for="edit_name">Full Name <span class="required-star">*</span></label>
+          <input type="text" class="form-control" id="edit_name" name="name" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="edit_phone">Phone (10 digits) <span class="required-star">*</span></label>
+          <input type="tel" pattern="[0-9]{10}" class="form-control" id="edit_phone" name="phone" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="edit_email">Email Address</label>
+          <input type="email" class="form-control" id="edit_email" name="email">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="edit_lic_no">Driving License No. <span class="required-star">*</span></label>
+          <input type="text" class="form-control" id="edit_lic_no" name="lic_no" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="edit_city">City</label>
+          <input type="text" class="form-control" id="edit_city" name="city">
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Update Customer</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function openAddModal() {
+  document.getElementById('addModal').classList.add('active');
+}
+function closeAddModal() {
+  document.getElementById('addModal').classList.remove('active');
+}
+function openEditModal(id, name, phone, email, lic, city) {
+  document.getElementById('editForm').action = '/staff/customers/' + id + '/edit';
+  document.getElementById('edit_name').value = name;
+  document.getElementById('edit_phone').value = phone;
+  document.getElementById('edit_email').value = email;
+  document.getElementById('edit_lic_no').value = lic;
+  document.getElementById('edit_city').value = city;
+  document.getElementById('editModal').classList.add('active');
+}
+function closeEditModal() {
+  document.getElementById('editModal').classList.remove('active');
+}
+</script>
+{% endblock %}

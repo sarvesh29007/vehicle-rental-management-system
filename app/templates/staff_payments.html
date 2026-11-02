@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Payments - Staff Desk{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Transaction Ledger</h1>
+    <p class="page-subtitle">Historical log of all payment transactions collected at the desk (Read-Only).</p>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body" style="padding: 0;">
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Txn ID</th>
+            <th>Booking</th>
+            <th>Customer</th>
+            <th>Vehicle</th>
+            <th>Amount Paid</th>
+            <th>Date & Time</th>
+            <th>Payment Mode</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in payments %}
+            <tr>
+              <td><strong>#{{ p.pid }}</strong></td>
+              <td>
+                <a href="{{ url_for('staff_bookings', q=p.bkid) }}" style="font-weight: 600; color: #2563eb; text-decoration: none;">
+                  Booking #{{ p.bkid }}
+                </a>
+              </td>
+              <td>{{ p.cust_name }}</td>
+              <td>{{ p.vehicle_model }}</td>
+              <td>
+                <strong style="color: #15803d; font-size: 0.95rem;">{{ p.amt|format_currency }}</strong>
+              </td>
+              <td>{{ p.pdt|format_date }}</td>
+              <td>
+                <span class="badge" style="background-color: #f1f5f9; color: #334155; border: 1px solid #cbd5e1;">
+                  {{ p.pmode }}
+                </span>
+              </td>
+            </tr>
+          {% else %}
+            <tr>
+              <td colspan="7" style="text-align: center; color: #94a3b8; padding: 24px;">No payments recorded yet.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

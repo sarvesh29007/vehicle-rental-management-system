@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Vehicle Rental System{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <h2>🚗 RentalCore</h2>
+        <div class="tagline">Enterprise Vehicle Fleet</div>
+      </div>
+
+      <nav class="sidebar-nav">
+        {% if session.get('role') == 'staff' %}
+          <div class="nav-section-title">Desk Operations</div>
+          <a href="{{ url_for('staff_dashboard') }}" class="nav-link {% if request.endpoint == 'staff_dashboard' %}active{% endif %}">
+            <span>📊</span> Dashboard
+          </a>
+          <a href="{{ url_for('staff_new_booking') }}" class="nav-link {% if request.endpoint == 'staff_new_booking' %}active{% endif %}">
+            <span>➕</span> New Booking
+          </a>
+          <a href="{{ url_for('staff_bookings') }}" class="nav-link {% if request.endpoint == 'staff_bookings' %}active{% endif %}">
+            <span>📑</span> Bookings
+          </a>
+          <a href="{{ url_for('staff_customers') }}" class="nav-link {% if request.endpoint == 'staff_customers' %}active{% endif %}">
+            <span>👥</span> Customers
+          </a>
+          <a href="{{ url_for('staff_vehicles') }}" class="nav-link {% if request.endpoint == 'staff_vehicles' %}active{% endif %}">
+            <span>🚘</span> Vehicles
+          </a>
+          <a href="{{ url_for('staff_payments') }}" class="nav-link {% if request.endpoint == 'staff_payments' %}active{% endif %}">
+            <span>💳</span> Payments
+          </a>
+        {% elif session.get('role') == 'manager' %}
+          <div class="nav-section-title">Executive Management</div>
+          <a href="{{ url_for('manager_dashboard') }}" class="nav-link {% if request.endpoint == 'manager_dashboard' %}active{% endif %}">
+            <span>📈</span> Analytics
+          </a>
+          <a href="{{ url_for('manager_dues') }}" class="nav-link {% if request.endpoint == 'manager_dues' %}active{% endif %}">
+            <span>💰</span> Dues Report
+          </a>
+          <a href="{{ url_for('manager_maintenance') }}" class="nav-link {% if request.endpoint == 'manager_maintenance' %}active{% endif %}">
+            <span>🔧</span> Maintenance
+          </a>
+          <a href="{{ url_for('manager_activity') }}" class="nav-link {% if request.endpoint == 'manager_activity' %}active{% endif %}">
+            <span>📝</span> Activity Log
+          </a>
+          <div class="nav-section-title">Fleet Monitoring</div>
+          <a href="{{ url_for('manager_vehicles') }}" class="nav-link {% if request.endpoint == 'manager_vehicles' %}active{% endif %}">
+            <span>🚘</span> Vehicles
+          </a>
+          <a href="{{ url_for('manager_customers') }}" class="nav-link {% if request.endpoint == 'manager_customers' %}active{% endif %}">
+            <span>👥</span> Customers
+          </a>
+          <a href="{{ url_for('manager_bookings') }}" class="nav-link {% if request.endpoint == 'manager_bookings' %}active{% endif %}">
+            <span>📑</span> Bookings
+          </a>
+        {% endif %}
+
+        <div class="nav-section-title">Database Schema</div>
+        <a href="{{ url_for('view_tables') }}" class="nav-link {% if request.endpoint == 'view_tables' %}active{% endif %}">
+          <span>🗄️</span> Database Tables
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div>Oracle Database Free</div>
+        <div style="font-size: 0.72rem; color: #64748b; margin-top: 2px;">PL/SQL Business Rules</div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+      <!-- TOP HEADER -->
+      <header class="app-header">
+        <div class="header-left">
+          {% if session.get('role') == 'staff' %}
+            <span class="portal-badge staff">Branch Staff Desk</span>
+          {% elif session.get('role') == 'manager' %}
+            <span class="portal-badge manager">General Manager</span>
+          {% endif %}
+        </div>
+
+        <div class="header-right">
+          <div class="user-info">
+            <span class="user-name">{{ session.get('name', 'User') }}</span>
+            <span class="user-role-label">{{ session.get('role', 'Operator')|capitalize }} Role</span>
+          </div>
+          <a href="{{ url_for('logout') }}" class="btn-logout">Sign Out</a>
+        </div>
+      </header>
+
+      <!-- PAGE BODY -->
+      <div class="page-container">
+        <!-- FLASH NOTIFICATIONS -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="alert-container">
+              {% for category, message in messages %}
+                <div class="alert alert-{{ category if category != 'error' else 'error' }}">
+                  <div>
+                    <strong>
+                      {% if category == 'success' %}✓ Success:
+                      {% elif category == 'error' %}⚠️ Error:
+                      {% elif category == 'warning' %}⚠️ Notice:
+                      {% else %}ℹ️ Info:
+                      {% endif %}
+                    </strong>
+                    {{ message }}
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+      </div>
+    </main>
+  </div>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

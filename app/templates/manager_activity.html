@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Activity Audit Log - Fleet Manager{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Booking Activity Audit Log</h1>
+    <p class="page-subtitle">Demonstrates Oracle Database Trigger <code>trg_bk_au</code>: records every status change into <code>bk_log</code> automatically.</p>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">Live Audit Log (<code>bk_log</code>, Newest First)</h3>
+    <span class="badge badge-pk">Populated Exclusively by PL/SQL Trigger</span>
+  </div>
+  <div class="card-body" style="padding: 0;">
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Log ID (lid)</th>
+            <th>Booking ID</th>
+            <th>Customer</th>
+            <th>Vehicle Model</th>
+            <th>Previous Status</th>
+            <th>New Status</th>
+            <th>Timestamp (ldt)</th>
+            <th>Trigger Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for l in logs %}
+            <tr>
+              <td><code>#{{ l.lid }}</code></td>
+              <td>
+                <strong>#{{ l.bkid }}</strong>
+              </td>
+              <td>{{ l.cust_name or '-' }}</td>
+              <td>{{ l.vehicle_model or '-' }}</td>
+              <td>
+                {% if l.old_st %}
+                  <span class="badge badge-{{ l.old_st.lower() }}">{{ l.old_st }}</span>
+                {% else %}
+                  <span style="color: #94a3b8;">None</span>
+                {% endif %}
+              </td>
+              <td>
+                <span class="badge badge-{{ l.new_st.lower() }}">{{ l.new_st }}</span>
+              </td>
+              <td>{{ l.ldt|format_date }}</td>
+              <td>
+                <span style="font-size: 0.8rem; color: #475569;">
+                  {% if l.new_st == 'ACTIVE' %}
+                    Vehicle marked <strong>RENTED</strong>
+                  {% elif l.new_st in ['RETURNED', 'CANCELLED'] %}
+                    Vehicle released to <strong>AVAILABLE</strong>
+                  {% else %}
+                    State registered
+                  {% endif %}
+                </span>
+              </td>
+            </tr>
+          {% else %}
+            <tr>
+              <td colspan="8" style="text-align: center; color: #94a3b8; padding: 24px;">No audit events recorded.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

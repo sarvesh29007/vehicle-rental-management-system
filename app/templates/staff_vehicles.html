@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Vehicles - Staff Desk{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Fleet Directory</h1>
+    <p class="page-subtitle">Inspect branch fleet availability, daily category rates, and current service condition (Read-Only).</p>
+  </div>
+</div>
+
+<!-- FILTERS -->
+<div class="card" style="margin-bottom: 20px;">
+  <div class="card-body" style="padding: 16px 24px;">
+    <form method="GET" action="{{ url_for('staff_vehicles') }}" style="display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap;">
+      <div class="form-group" style="margin-bottom: 0; min-width: 180px;">
+        <label class="form-label" for="statusFilter">Status Filter</label>
+        <select class="form-control" id="statusFilter" name="status">
+          <option value="">All Statuses</option>
+          <option value="AVAILABLE" {% if current_status == 'AVAILABLE' %}selected{% endif %}>AVAILABLE</option>
+          <option value="RENTED" {% if current_status == 'RENTED' %}selected{% endif %}>RENTED</option>
+          <option value="SERVICE" {% if current_status == 'SERVICE' %}selected{% endif %}>SERVICE</option>
+        </select>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 0; min-width: 180px;">
+        <label class="form-label" for="categoryFilter">Category Filter</label>
+        <select class="form-control" id="categoryFilter" name="category">
+          <option value="">All Categories</option>
+          {% for cat in categories %}
+            <option value="{{ cat.cname }}" {% if current_cat == cat.cname %}selected{% endif %}>{{ cat.cname }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn-secondary">Apply Filters</button>
+      {% if current_status or current_cat %}
+        <a href="{{ url_for('staff_vehicles') }}" class="btn btn-secondary">Reset</a>
+      {% endif %}
+    </form>
+  </div>
+</div>
+
+<!-- VEHICLES TABLE -->
+<div class="card">
+  <div class="card-body" style="padding: 0;">
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Model</th>
+            <th>Registration</th>
+            <th>Category</th>
+            <th>Daily Rate</th>
+            <th>Stationed Branch</th>
+            <th>Model Year</th>
+            <th>Live Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for v in vehicles %}
+            <tr>
+              <td><strong>#{{ v.vid }}</strong></td>
+              <td><strong>{{ v.model }}</strong></td>
+              <td><code>{{ v.reg_no }}</code></td>
+              <td>{{ v.category }}</td>
+              <td><strong>{{ v.rate|format_currency }}</strong> / day</td>
+              <td>{{ v.branch }} ({{ v.branch_city }})</td>
+              <td>{{ v.yr }}</td>
+              <td>
+                <span class="badge badge-{{ v.status.lower() }}">{{ v.status }}</span>
+              </td>
+            </tr>
+          {% else %}
+            <tr>
+              <td colspan="8" style="text-align: center; color: #94a3b8; padding: 24px;">No vehicles match the selected criteria.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

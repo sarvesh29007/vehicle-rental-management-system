@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+
+{% block title %}Bookings - Staff Desk{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Booking Management</h1>
+    <p class="page-subtitle">Manage reservations, execute vehicle handovers (<code>p_start</code>), vehicle returns (<code>p_return</code>), and payments (<code>p_pay</code>).</p>
+  </div>
+  <a href="{{ url_for('staff_new_booking') }}" class="btn btn-primary">
+    <span>➕</span> New Booking
+  </a>
+</div>
+
+<!-- FILTER TABS & SEARCH BAR -->
+<div class="filter-bar">
+  <div class="tabs-nav">
+    <a href="{{ url_for('staff_bookings', tab='ALL', q=search_query) }}" class="tab-btn {% if current_tab == 'ALL' %}active{% endif %}">All</a>
+    <a href="{{ url_for('staff_bookings', tab='BOOKED', q=search_query) }}" class="tab-btn {% if current_tab == 'BOOKED' %}active{% endif %}">Booked</a>
+    <a href="{{ url_for('staff_bookings', tab='ACTIVE', q=search_query) }}" class="tab-btn {% if current_tab == 'ACTIVE' %}active{% endif %}">Active</a>
+    <a href="{{ url_for('staff_bookings', tab='RETURNED', q=search_query) }}" class="tab-btn {% if current_tab == 'RETURNED' %}active{% endif %}">Returned</a>
+    <a href="{{ url_for('staff_bookings', tab='CANCELLED', q=search_query) }}" class="tab-btn {% if current_tab == 'CANCELLED' %}active{% endif %}">Cancelled</a>
+  </div>
+
+  <form method="GET" action="{{ url_for('staff_bookings') }}" style="display: flex; gap: 8px;">
+    <input type="hidden" name="tab" value="{{ current_tab }}">
+    <input type="text" name="q" class="form-control search-box" placeholder="Search customer, vehicle, reg no, ID..." value="{{ search_query }}">
+    <button type="submit" class="btn btn-secondary">Search</button>
+    {% if search_query %}
+      <a href="{{ url_for('staff_bookings', tab=current_tab) }}" class="btn btn-secondary">Clear</a>
+    {% endif %}
+  </form>
+</div>
+
+<!-- BOOKINGS TABLE -->
+<div class="card">
+  <div class="card-body" style="padding: 0;">
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Customer</th>
+            <th>Vehicle</th>
+            <th>Rental Dates</th>
+            <th>Status</th>
+            <th>Total Bill</th>
+            <th>Pending</th>
+            <th style="text-align: right;">Desk Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for b in bookings %}
+            <tr>
+              <td><strong>#{{ b.bkid }}</strong></td>
+              <td>
+                <div style="font-weight: 600;">{{ b.cust_name }}</div>
+                <div style="font-size: 0.78rem; color: #64748b;">{{ b.cust_phone }}</div>
+              </td>
+              <td>
+                <div style="font-weight: 600;">{{ b.model }}</div>
+                <div style="font-size: 0.78rem; color: #64748b;">{{ b.reg_no }} ({{ b.category }})</div>
+              </td>
+              <td>
+                <div>{{ b.sdt|format_date }} → {{ b.edt|format_date }}</div>
+              </td>
+              <td>
+                <span class="badge badge-{{ b.status.lower() }}">{{ b.status }}</span>
+              </td>
+              <td>{{ b.total|format_currency }}</td>
+              <td>
+                {% if b.bal > 0 %}
+                  <strong style="color: #b91c1c;">{{ b.bal|format_currency }}</strong>
+                {% elif b.status == 'CANCELLED' %}
+                  <span style="color: #64748b;">-</span>
+                {% else %}
+                  <span style="color: #15803d; font-weight: 600;">✓ Settled</span>
+                {% endif %}
+              </td>
+              <td style="text-align: right;">
+                <div class="btn-group" style="justify-content: flex-end;">
+                  <!-- BOOKED ACTIONS -->
+                  {% if b.status == 'BOOKED' %}
+                    <form method="POST" action="{{ url_for('staff_booking_start', bkid=b.bkid) }}" onsubmit="return confirm('Confirm handover of vehicle {{ b.model }} to {{ b.cust_name }}? This will activate booking and mark vehicle RENTED.');">
+                      <button type="submit" class="btn btn-success btn-sm">Hand Over (p_start)</button>
+                    </form>
+                    <form method="POST" action="{{ url_for('staff_booking_cancel', bkid=b.bkid) }}" onsubmit="return confirm('Are you sure you want to cancel booking #{{ b.bkid }}?');">
+                      <button type="submit" class="btn btn-danger btn-sm">Cancel</button>
+                    </form>
+                  {% endif %}
+
+                  <!-- ACTIVE ACTIONS -->
+                  {% if b.status == 'ACTIVE' %}
+                    <form method="POST" action="{{ url_for('staff_booking_return', bkid=b.bkid) }}" onsubmit="return confirm('Confirm return of vehicle {{ b.model }} for booking #{{ b.bkid }}? This will mark vehicle AVAILABLE.');">
+                      <button type="submit" class="btn btn-primary btn-sm">Return (p_return)</button>
+                    </form>
+                  {% endif %}
+
+                  <!-- PAY ACTION IF BALANCE > 0 -->
+                  {% if b.bal > 0 and b.status != 'CANCELLED' %}
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="openPayModal({{ b.bkid }}, '{{ b.cust_name }}', {{ b.bal }})">
+                      💳 Pay
+                    </button>
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+          {% else %}
+            <tr>
+              <td colspan="8" style="text-align: center; color: #94a3b8; padding: 32px;">
+                No bookings found matching current tab / filter.
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- PAYMENT MODAL -->
+<div class="modal-overlay" id="payModal">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <h3 class="card-title">Record Payment (p_pay)</h3>
+      <button type="button" class="btn btn-secondary btn-sm" onclick="closePayModal()">✕</button>
+    </div>
+    <form id="payForm" method="POST" action="">
+      <div class="modal-body">
+        <p style="font-size: 0.88rem; color: #64748b; margin-bottom: 16px;" id="modalSubtext">
+          Record settlement for booking.
+        </p>
+
+        <div class="form-group">
+          <label class="form-label" for="payAmt">Payment Amount (INR) <span class="required-star">*</span></label>
+          <input type="number" step="0.01" min="1" class="form-control" id="payAmt" name="amt" required>
+          <span class="form-hint" id="maxBalHint">Cannot exceed pending balance.</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="payMode">Payment Mode <span class="required-star">*</span></label>
+          <select class="form-control" id="payMode" name="pmode" required>
+            <option value="UPI">UPI</option>
+            <option value="CARD">Credit / Debit Card</option>
+            <option value="CASH">Cash</option>
+          </select>
+        </div>
+
+        <div class="form-actions" style="margin-top: 20px;">
+          <button type="button" class="btn btn-secondary" onclick="closePayModal()">Cancel</button>
+          <button type="submit" class="btn btn-success">Submit Payment</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function openPayModal(bkid, custName, bal) {
+  const form = document.getElementById('payForm');
+  form.action = '/staff/bookings/' + bkid + '/pay';
+  document.getElementById('modalSubtext').innerText = 'Recording payment for Booking #' + bkid + ' (' + custName + '). Outstanding balance: Rs. ' + bal.toLocaleString('en-IN');
+  const amtInput = document.getElementById('payAmt');
+  amtInput.value = bal;
+  amtInput.max = bal;
+  document.getElementById('maxBalHint').innerText = 'Max allowed payment: Rs. ' + bal.toLocaleString('en-IN') + ' (Enforced by PL/SQL p_pay)';
+  document.getElementById('payModal').classList.add('active');
+}
+
+function closePayModal() {
+  document.getElementById('payModal').classList.remove('active');
+}
+</script>
+{% endblock %}

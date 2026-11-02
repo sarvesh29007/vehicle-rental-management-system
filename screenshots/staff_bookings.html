@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bookings - Staff Desk</title>
+  <link rel="stylesheet" href="c:/sarvesh/placement preparations/projects/ganti1/vehicle_rental/app/static/style.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <h2>🚗 RentalCore</h2>
+        <div class="tagline">Enterprise Vehicle Fleet</div>
+      </div>
+
+      <nav class="sidebar-nav">
+        
+          <div class="nav-section-title">Desk Operations</div>
+          <a href="/staff" class="nav-link ">
+            <span>📊</span> Dashboard
+          </a>
+          <a href="/staff/new-booking" class="nav-link ">
+            <span>➕</span> New Booking
+          </a>
+          <a href="/staff/bookings" class="nav-link active">
+            <span>📑</span> Bookings
+          </a>
+          <a href="/staff/customers" class="nav-link ">
+            <span>👥</span> Customers
+          </a>
+          <a href="/staff/vehicles" class="nav-link ">
+            <span>🚘</span> Vehicles
+          </a>
+          <a href="/staff/payments" class="nav-link ">
+            <span>💳</span> Payments
+          </a>
+        
+
+        <div class="nav-section-title">Database Schema</div>
+        <a href="/tables" class="nav-link ">
+          <span>🗄️</span> Database Tables
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div>Oracle Database Free</div>
+        <div style="font-size: 0.72rem; color: #64748b; margin-top: 2px;">PL/SQL Business Rules</div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+      <!-- TOP HEADER -->
+      <header class="app-header">
+        <div class="header-left">
+          
+            <span class="portal-badge staff">Branch Staff Desk</span>
+          
+        </div>
+
+        <div class="header-right">
+          <div class="user-info">
+            <span class="user-name">Branch Staff</span>
+            <span class="user-role-label">Staff Role</span>
+          </div>
+          <a href="/logout" class="btn-logout">Sign Out</a>
+        </div>
+      </header>
+
+      <!-- PAGE BODY -->
+      <div class="page-container">
+        <!-- FLASH NOTIFICATIONS -->
+        
+          
+            <div class="alert-container">
+              
+                <div class="alert alert-info">
+                  <div>
+                    <strong>
+                      ℹ️ Info:
+                      
+                    </strong>
+                    You have been logged out successfully.
+                  </div>
+                </div>
+              
+                <div class="alert alert-success">
+                  <div>
+                    <strong>
+                      ✓ Success:
+                      
+                    </strong>
+                    Welcome back, Branch Staff!
+                  </div>
+                </div>
+              
+            </div>
+          
+        
+
+        
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Booking Management</h1>
+    <p class="page-subtitle">Manage reservations, execute vehicle handovers (<code>p_start</code>), vehicle returns (<code>p_return</code>), and payments (<code>p_pay</code>).</p>
+  </div>
+  <a href="/staff/new-booking" class="btn btn-primary">
+    <span>➕</span> New Booking
+  </a>
+</div>
+
+<!-- FILTER TABS & SEARCH BAR -->
+<div class="filter-bar">
+  <div class="tabs-nav">
+    <a href="/staff/bookings?tab=ALL&amp;q=" class="tab-btn active">All</a>
+    <a href="/staff/bookings?tab=BOOKED&amp;q=" class="tab-btn ">Booked</a>
+    <a href="/staff/bookings?tab=ACTIVE&amp;q=" class="tab-btn ">Active</a>
+    <a href="/staff/bookings?tab=RETURNED&amp;q=" class="tab-btn ">Returned</a>
+    <a href="/staff/bookings?tab=CANCELLED&amp;q=" class="tab-btn ">Cancelled</a>
+  </div>
+
+  <form method="GET" action="/staff/bookings" style="display: flex; gap: 8px;">
+    <input type="hidden" name="tab" value="ALL">
+    <input type="text" name="q" class="form-control search-box" placeholder="Search customer, vehicle, reg no, ID..." value="">
+    <button type="submit" class="btn btn-secondary">Search</button>
+    
+  </form>
+</div>
+
+<!-- BOOKINGS TABLE -->
+<div class="card">
+  <div class="card-body" style="padding: 0;">
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Customer</th>
+            <th>Vehicle</th>
+            <th>Rental Dates</th>
+            <th>Status</th>
+            <th>Total Bill</th>
+            <th>Pending</th>
+            <th style="text-align: right;">Desk Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+            <tr>
+              <td><strong>#13</strong></td>
+              <td>
+                <div style="font-weight: 600;">Arun Kumar</div>
+                <div style="font-size: 0.78rem; color: #64748b;">9840011001</div>
+              </td>
+              <td>
+                <div style="font-weight: 600;">Swift</div>
+                <div style="font-size: 0.78rem; color: #64748b;">TN01AB1001 (Hatchback)</div>
+              </td>
+              <td>
+                <div>10 Nov 2026 → 12 Nov 2026</div>
+              </td>
+              <td>
+                <span class="badge badge-booked">BOOKED</span>
+              </td>
+              <td>Rs. 2,400</td>
+              <td>
+                
+                  <strong style="color: #b91c1c;">Rs. 2,400</strong>
+                
+              </td>
+              <td style="text-align: right;">
+                <div class="btn-group" style="justify-content: flex-end;">
+                  <!-- BOOKED ACTIONS -->
+                  
+                    <form method="POST" action="/staff/bookings/13/start" onsubmit="return confirm('Confirm handover of vehicle Swift to Arun Kumar? This will activate booking and mark vehicle RENTED.');">
+                      <button type="submit" class="btn btn-success btn-sm">Hand Over (p_start)</button>
+                    </form>
+                    <form method="POST" action="/staff/bookings/13/cancel" onsubmit="return confirm('Are you sure you want to cancel booking #13?');">
+                      <button type="submit" class="btn btn-danger btn-sm">Cancel</button>
+                    </form>
+                  
+
+                  <!-- ACTIVE ACTIONS -->
+                  
+
+                  <!-- PAY ACTION IF BALANCE > 0 -->
+                  
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="openPayModal(13, 'Arun Kumar', 2400)">
+                      💳 Pay
+                    </button>
+                  
+                </div>
+              </td>
+            </tr>
+          
+            <tr>
+              <td><strong>#12</strong></td>
+              <td>
+                <div style="font-weight: 600;">Priya Sharma</div>
+                <div style="font-size: 0.78rem; color: #64748b;">9840011002</div>
+              </td>
+              <td>
+                <div style="font-weight: 600;">Honda City</div>
+                <div style="font-size: 0.78rem; color: #64748b;">TN01AB1002 (Sedan)</div>
+              </td>
+              <td>
+                <div>20 Oct 2026 → 23 Oct 2026</div>
+              </td>
+              <td>
+                <span class="badge badge-booked">BOOKED</span>
+              </td>
+              <td>Rs. 5,400</td>
+              <td>
+                
+                  <strong style="color: #b91c1c;">Rs. 5,400</strong>
+                
+              </td>
+              <td style="text-align: right;">
+                <div class="btn-group" style="justify-content: flex-end;">
+                  <!-- BOOKED ACTIONS -->
+                  
+                    <form method="POST" action="/staff/bookings/12/start" onsubmit="return confirm('Confirm handover of vehicle Honda City to Priya Sharma? This will activate booking and mark vehicle RENTED.');">
+                      <button type="submit" class="btn btn-success btn-sm">Hand Over (p_start)</button>
+                    </form>
+                    <form method="POST" action="/staff/bookings/12/cancel" onsubmit="return confirm('Are you sure you want to cancel booking #12?');">
+                      <button type="submit" class="btn btn-danger btn-sm">Cancel</button>
+                    </form>
+                  
+
+                  <!-- ACTIVE ACTIONS -->
+                  
+
+                  <!-- PAY ACTION IF BALANCE > 0 -->
+                  
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="openPayModal(12, 'Priya Sharma', 5400)">
+                      💳 Pay
+                    </button>
+                  
+                </div>
+              </td>
+            </tr>
+          
+            <tr>
+              <td><strong>#11</strong></td>
+              <td>
+                <div style="font-weight: 600;">Arun Kumar</div>
+                <div style="font-size: 0.78rem; color: #64748b;">9840011001</div>
+              </td>
+              <td>
+                <div style="font-weight: 600;">Creta</div>
+                <div style="font-size: 0.78rem; color: #64748b;">TN32CD2003 (SUV)</div>
+              </td>
+              <td>
+                <div>11 Oct 2026 → 15 Oct 2026</div>
+              </td>
+              <td>
+                <span class="badge badge-active">ACTIVE</span>
+              </td>
+              <td>Rs. 10,000</td>
+              <td>
+                
+                  <strong style="color: #b91c1c;">Rs. 5,000</strong>
+                
+              </td>
+              <td style="text-align: right;">
+                <div class="btn-group" style="justify-content: flex-end;">
+                  <!-- BOOKED ACTIONS -->
+                  
+
+                  <!-- ACTIVE ACTIONS -->
+                  
+                    <form method="POST" action="/staff/bookings/11/return" onsubmit="return confirm('Confirm return of vehicle Creta for booking #11? This will mark vehicle AVAILABLE.');">
+                      <button type="submit" class="btn btn-primary btn-sm">Return (p_return)</button>
+                    </form>
+                  
+
+                  <!-- PAY ACTION IF BALANCE > 0 -->
+                  
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="openPayModal(11, 'Arun Kumar', 5000)">
+                      💳 Pay
+                    </button>
+                  
+                </div>
+              </td>
+            </tr>
+          
+            <tr>
+              <td><strong>#10</strong></td>
+              <td>
+                <div style="font-weight: 600;">Lakshmi Iyer</div>
+                <div style="font-size: 0.78rem; color: #64748b;">9840011010</div>
+              </td>
+              <td>
+                <div style="font-weight: 600;">Swift</div>
+                <div style="font-size: 0.78rem; color: #64748b;">TN01AB1001 (Hatchback)</div>
+              </td>
+              <td>
+                <div>05 Oct 2026 → 09 Oct 2026</div>
+              </td>
+              <td>
+                <span class="badge badge-returned">RETURNED</span>
+              </td>
+              <td>Rs. 4,800</td>
+              <td>
+                
+                  <span style="color: #15803d; font-weight: 600;">✓ Settled</span>
+                
+              </td>
+              <td style="text-align: right;">
+                <div class="btn-group" style="justify-content: flex-end;">
+                  <!-- BOOKED ACTIONS -->
+                  
+
+                  <!-- ACTIVE ACTIONS -->
+                  
+
+                  <!-- PAY ACTION IF BALANCE > 0 -->
+                  
+                </div>
+              </td>
+            </tr>
+          
+            <tr>
+              <td><strong>#9</strong></td>
+              <td>
+                <div style="font-weight: 600;">Rahul Verma</div>
+                <div style="font-size: 0.78rem; color: #64748b;">9840011009</div>
+              </td>
+              <td>
+                <div style="font-weight: 600;">Force Traveller</div>
+                <div style="font-size: 0.78rem; color: #64748b;">TN30LM6007 (Van)</div>
+              </td>
+              <td>
+                <div>20 Sep 2026 → 24 Sep 2026</div>
+              </td>
+              <td>
+                <span class="badge badge-returned">RETURNED</span>
+              </td>
+              <td>Rs. 12,000</td>
+              <td>
+                
+                  <span style="color: #15803d; font-weight: 600;">✓ Settled</span>
+                
+              </td>
+              <td style="text-align: right;">
+                <div class="btn-group" style="justify-content: flex-end;">
+                  <!-- BOOKED ACTIONS -->
+                  
+
+                  <!-- ACTIVE ACTIONS -->
+                  
+
+                  <!-- PAY ACTION IF BALANCE > 0 -->
+                  
+                </div>
+              </td>
+            </tr>
+          
+            <tr>
+              <td><strong>#8</strong></td>
+              <td>
+                <div style="font-weight: 600;">Anita Joseph</div>
+                <div style="font-size: 0.78rem; color: #64748b;">9840011008</div>
+              </td>
+              <td>
+                <div style="font-weight: 600;">Activa</div>
+                <div style="font-size: 0.78rem; color: #64748b;">TN45JK5006 (Scooter)</div>
+              </td>
+              <td>
+                <div>15 Sep 2026 → 16 Sep 2026</div>
+              </td>
+              <td>
+                <span class="badge badge-cancelled">CANCELLED</span>
+              </td>
+              <td>Rs. 400</td>
+              <td>
+                
+                  <span style="color: #64748b;">-</span>
+                
+              </td>
+              <td style="text-align: right;">
+                <div class="btn-group" style="justify-content: flex-end;">
+                  <!-- BOOKED ACTIONS -->
+                  
+
+                  <!-- ACTIVE ACTIONS -->
+                  
+
+                  <!-- PAY ACTION IF BALANCE > 0 -->
+                  
+                </div>
+              </td>
+            </tr>
+          
+            <tr>
+              <td><strong>#7</strong></td>
+              <td>
+                <div style="font-weight: 600;">Vignesh S</div>
+                <div style="font-size: 0.78rem; color: #64748b;">9840011007</div>
+              </td>
+              <td>
+                <div style="font-weight: 600;">Nexon EV</div>
+                <div style="font-size: 0.78rem; color: #64748b;">TS09QR8009 (Electric)</div>
+              </td>
+              <td>
+                <div>10 Sep 2026 → 13 Sep 2026</div>
+              </td>
+              <td>
+                <span class="badge badge-returned">RETURNED</span>
+              </td>
+              <td>Rs. 6,600</td>
+              <td>
+                
+                  <span style="color: #15803d; font-weight: 600;">✓ Settled</span>
+                
+              </td>
+              <td style="text-align: right;">
+                <div class="btn-group" style="justify-content: flex-end;">
+                  <!-- BOOKED ACTIONS -->
+                  
+
+                  <!-- ACTIVE ACTIONS -->
+                  
+
+                  <!-- PAY ACTION IF BALANCE > 0 -->
+                  
+                </div>
+              </td>
+            </tr>
+          
+            <tr>
+              <td><strong>#6</strong></td>
+              <td>
+                <div style="font-weight: 600;">Sneha Reddy</div>
+                <div style="font-size: 0.78rem; color: #64748b;">9840011006</div>
+              </td>
+              <td>
+                <div style="font-weight: 600;">Innova</div>
+                <div style="font-size: 0.78rem; color: #64748b;">KA03NP7008 (MUV)</div>
+              </td>
+              <td>
+                <div>01 Sep 2026 → 05 Sep 2026</div>
+              </td>
+              <td>
+                <span class="badge badge-returned">RETURNED</span>
+              </td>
+              <td>Rs. 11,200</td>
+              <td>
+                
+                  <span style="color: #15803d; font-weight: 600;">✓ Settled</span>
+                
+              </td>
+              <td style="text-align: right;">
+                <div class="btn-group" style="justify-content: flex-end;">
+                  <!-- BOOKED ACTIONS -->
+                  
+
+                  <!-- ACTIVE ACTIONS -->
+                  
+
+                  <!-- PAY ACTION IF BALANCE > 0 -->
+                  
+                </div>
+              </td>
+            </tr>
+          
+            <tr>
+              <td><strong>#5</strong></td>
+              <td>
+                <div style="font-weight: 600;">Mohammed Irfan</div>
+                <div style="font-size: 0.78rem; color: #64748b;">9840011005</div>
+              </td>
+              <td>
+                <div style="font-weight: 600;">Royal Enfield</div>
+                <div style="font-size: 0.78rem; color: #64748b;">TN58GH4005 (Bike)</div>
+              </td>
+              <td>
+                <div>20 Aug 2026 → 22 Aug 2026</div>
+              </td>
+              <td>
+                <span class="badge badge-returned">RETURNED</span>
+              </td>
+              <td>Rs. 1,000</td>
+              <td>
+                
+                  <span style="color: #15803d; font-weight: 600;">✓ Settled</span>
+                
+              </td>
+              <td style="text-align: right;">
+                <div class="btn-group" style="justify-content: flex-end;">
+                  <!-- BOOKED ACTIONS -->
+                  
+
+                  <!-- ACTIVE ACTIONS -->
+                  
+
+                  <!-- PAY ACTION IF BALANCE > 0 -->
+                  
+                </div>
+              </td>
+            </tr>
+          
+            <tr>
+              <td><strong>#4</strong></td>
+              <td>
+                <div style="font-weight: 600;">Divya Nair</div>
+                <div style="font-size: 0.78rem; color: #64748b;">9840011004</div>
+              </td>
+              <td>
+                <div style="font-weight: 600;">BMW 3 Series</div>
+                <div style="font-size: 0.78rem; color: #64748b;">TN38EF3004 (Luxury)</div>
+              </td>
+              <td>
+                <div>15 Aug 2026 → 18 Aug 2026</div>
+              </td>
+              <td>
+                <span class="badge badge-returned">RETURNED</span>
+              </td>
+              <td>Rs. 15,000</td>
+              <td>
+                
+                  <span style="color: #15803d; font-weight: 600;">✓ Settled</span>
+                
+              </td>
+              <td style="text-align: right;">
+                <div class="btn-group" style="justify-content: flex-end;">
+                  <!-- BOOKED ACTIONS -->
+                  
+
+                  <!-- ACTIVE ACTIONS -->
+                  
+
+                  <!-- PAY ACTION IF BALANCE > 0 -->
+                  
+                </div>
+              </td>
+            </tr>
+          
+            <tr>
+              <td><strong>#3</strong></td>
+              <td>
+                <div style="font-weight: 600;">Karthik Raj</div>
+                <div style="font-size: 0.78rem; color: #64748b;">9840011003</div>
+              </td>
+              <td>
+                <div style="font-weight: 600;">Honda City</div>
+                <div style="font-size: 0.78rem; color: #64748b;">TN01AB1002 (Sedan)</div>
+              </td>
+              <td>
+                <div>10 Aug 2026 → 12 Aug 2026</div>
+              </td>
+              <td>
+                <span class="badge badge-returned">RETURNED</span>
+              </td>
+              <td>Rs. 3,600</td>
+              <td>
+                
+                  <span style="color: #15803d; font-weight: 600;">✓ Settled</span>
+                
+              </td>
+              <td style="text-align: right;">
+                <div class="btn-group" style="justify-content: flex-end;">
+                  <!-- BOOKED ACTIONS -->
+                  
+
+                  <!-- ACTIVE ACTIONS -->
+                  
+
+                  <!-- PAY ACTION IF BALANCE > 0 -->
+                  
+                </div>
+              </td>
+            </tr>
+          
+            <tr>
+              <td><strong>#2</strong></td>
+              <td>
+                <div style="font-weight: 600;">Priya Sharma</div>
+                <div style="font-size: 0.78rem; color: #64748b;">9840011002</div>
+              </td>
+              <td>
+                <div style="font-weight: 600;">Creta</div>
+                <div style="font-size: 0.78rem; color: #64748b;">TN32CD2003 (SUV)</div>
+              </td>
+              <td>
+                <div>05 Aug 2026 → 08 Aug 2026</div>
+              </td>
+              <td>
+                <span class="badge badge-returned">RETURNED</span>
+              </td>
+              <td>Rs. 7,500</td>
+              <td>
+                
+                  <span style="color: #15803d; font-weight: 600;">✓ Settled</span>
+                
+              </td>
+              <td style="text-align: right;">
+                <div class="btn-group" style="justify-content: flex-end;">
+                  <!-- BOOKED ACTIONS -->
+                  
+
+                  <!-- ACTIVE ACTIONS -->
+                  
+
+                  <!-- PAY ACTION IF BALANCE > 0 -->
+                  
+                </div>
+              </td>
+            </tr>
+          
+            <tr>
+              <td><strong>#1</strong></td>
+              <td>
+                <div style="font-weight: 600;">Arun Kumar</div>
+                <div style="font-size: 0.78rem; color: #64748b;">9840011001</div>
+              </td>
+              <td>
+                <div style="font-weight: 600;">Swift</div>
+                <div style="font-size: 0.78rem; color: #64748b;">TN01AB1001 (Hatchback)</div>
+              </td>
+              <td>
+                <div>01 Aug 2026 → 04 Aug 2026</div>
+              </td>
+              <td>
+                <span class="badge badge-returned">RETURNED</span>
+              </td>
+              <td>Rs. 3,600</td>
+              <td>
+                
+                  <span style="color: #15803d; font-weight: 600;">✓ Settled</span>
+                
+              </td>
+              <td style="text-align: right;">
+                <div class="btn-group" style="justify-content: flex-end;">
+                  <!-- BOOKED ACTIONS -->
+                  
+
+                  <!-- ACTIVE ACTIONS -->
+                  
+
+                  <!-- PAY ACTION IF BALANCE > 0 -->
+                  
+                </div>
+              </td>
+            </tr>
+          
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- PAYMENT MODAL -->
+<div class="modal-overlay" id="payModal">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <h3 class="card-title">Record Payment (p_pay)</h3>
+      <button type="button" class="btn btn-secondary btn-sm" onclick="closePayModal()">✕</button>
+    </div>
+    <form id="payForm" method="POST" action="">
+      <div class="modal-body">
+        <p style="font-size: 0.88rem; color: #64748b; margin-bottom: 16px;" id="modalSubtext">
+          Record settlement for booking.
+        </p>
+
+        <div class="form-group">
+          <label class="form-label" for="payAmt">Payment Amount (INR) <span class="required-star">*</span></label>
+          <input type="number" step="0.01" min="1" class="form-control" id="payAmt" name="amt" required>
+          <span class="form-hint" id="maxBalHint">Cannot exceed pending balance.</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="payMode">Payment Mode <span class="required-star">*</span></label>
+          <select class="form-control" id="payMode" name="pmode" required>
+            <option value="UPI">UPI</option>
+            <option value="CARD">Credit / Debit Card</option>
+            <option value="CASH">Cash</option>
+          </select>
+        </div>
+
+        <div class="form-actions" style="margin-top: 20px;">
+          <button type="button" class="btn btn-secondary" onclick="closePayModal()">Cancel</button>
+          <button type="submit" class="btn btn-success">Submit Payment</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+      </div>
+    </main>
+  </div>
+  
+<script>
+function openPayModal(bkid, custName, bal) {
+  const form = document.getElementById('payForm');
+  form.action = '/staff/bookings/' + bkid + '/pay';
+  document.getElementById('modalSubtext').innerText = 'Recording payment for Booking #' + bkid + ' (' + custName + '). Outstanding balance: Rs. ' + bal.toLocaleString('en-IN');
+  const amtInput = document.getElementById('payAmt');
+  amtInput.value = bal;
+  amtInput.max = bal;
+  document.getElementById('maxBalHint').innerText = 'Max allowed payment: Rs. ' + bal.toLocaleString('en-IN') + ' (Enforced by PL/SQL p_pay)';
+  document.getElementById('payModal').classList.add('active');
+}
+
+function closePayModal() {
+  document.getElementById('payModal').classList.remove('active');
+}
+</script>
+
+</body>
+</html>

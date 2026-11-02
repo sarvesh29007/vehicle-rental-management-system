@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block title %}Staff Dashboard - Vehicle Rental System{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Branch Desk Dashboard</h1>
+    <p class="page-subtitle">Real-time fleet status, active handovers, and collection summaries.</p>
+  </div>
+  <a href="{{ url_for('staff_new_booking') }}" class="btn btn-primary">
+    <span>➕</span> New Reservation
+  </a>
+</div>
+
+<!-- STAT CARDS -->
+<div class="card-grid">
+  <div class="stat-card stat-success">
+    <div class="stat-title">Available Fleet</div>
+    <div class="stat-value">{{ counts.cnt_available if counts else 0 }}</div>
+    <div class="stat-desc">Vehicles ready for rental</div>
+  </div>
+
+  <div class="stat-card stat-warning">
+    <div class="stat-title">Vehicles on Rent</div>
+    <div class="stat-value">{{ counts.cnt_rented if counts else 0 }}</div>
+    <div class="stat-desc">Currently with active customers</div>
+  </div>
+
+  <div class="stat-card stat-danger">
+    <div class="stat-title">Under Service</div>
+    <div class="stat-value">{{ counts.cnt_service if counts else 0 }}</div>
+    <div class="stat-desc">Maintenance & repair bay</div>
+  </div>
+
+  <div class="stat-card stat-info">
+    <div class="stat-title">Pending Collections</div>
+    <div class="stat-value">{{ total_due|format_currency }}</div>
+    <div class="stat-desc">Outstanding customer balances</div>
+  </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 28px;">
+  <!-- BOOKINGS WAITING FOR HANDOVER -->
+  <div class="card" style="margin-bottom: 0;">
+    <div class="card-header">
+      <h3 class="card-title">Bookings Waiting for Handover</h3>
+      <span class="badge badge-booked">{{ waiting_count }} BOOKED</span>
+    </div>
+    <div class="card-body" style="padding: 16px;">
+      <p style="font-size: 0.88rem; color: #64748b; margin-bottom: 12px;">
+        Customers with approved bookings ready to pick up their vehicles.
+      </p>
+      <a href="{{ url_for('staff_bookings', tab='BOOKED') }}" class="btn btn-secondary btn-sm">
+        View Waiting Bookings & Hand Over →
+      </a>
+    </div>
+  </div>
+
+  <!-- VEHICLES OUT WITH RETURN DATES -->
+  <div class="card" style="margin-bottom: 0;">
+    <div class="card-header">
+      <h3 class="card-title">Vehicles Currently Out</h3>
+      <span class="badge badge-rented">{{ rented_vehicles|length }} ACTIVE</span>
+    </div>
+    <div class="card-body" style="padding: 0;">
+      {% if rented_vehicles %}
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Booking</th>
+                <th>Customer</th>
+                <th>Vehicle</th>
+                <th>Return Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for rv in rented_vehicles %}
+                <tr>
+                  <td><strong>#{{ rv.bkid }}</strong></td>
+                  <td>{{ rv.cust_name }}</td>
+                  <td>{{ rv.model }} ({{ rv.reg_no }})</td>
+                  <td>{{ rv.edt|format_date }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div style="padding: 20px; text-align: center; color: #94a3b8; font-size: 0.9rem;">
+          No vehicles currently out on rent.
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- LATEST 5 BOOKINGS TABLE -->
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">Latest 5 Bookings</h3>
+    <a href="{{ url_for('staff_bookings') }}" class="btn btn-secondary btn-sm">All Bookings</a>
+  </div>
+  <div class="card-body" style="padding: 0;">
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Customer</th>
+            <th>Vehicle</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Status</th>
+            <th>Total</th>
+            <th>Pending</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for b in latest_bookings %}
+            <tr>
+              <td><strong>#{{ b.bkid }}</strong></td>
+              <td>{{ b.cust_name }}</td>
+              <td>{{ b.model }}</td>
+              <td>{{ b.sdt|format_date }}</td>
+              <td>{{ b.edt|format_date }}</td>
+              <td>
+                <span class="badge badge-{{ b.status.lower() }}">{{ b.status }}</span>
+              </td>
+              <td>{{ b.total|format_currency }}</td>
+              <td>
+                {% if b.bal > 0 %}
+                  <strong style="color: #b91c1c;">{{ b.bal|format_currency }}</strong>
+                {% else %}
+                  <span style="color: #15803d;">Paid</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% else %}
+            <tr>
+              <td colspan="8" style="text-align: center; color: #94a3b8; padding: 24px;">No bookings found.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

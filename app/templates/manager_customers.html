@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Customer Accounts - Fleet Manager{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Customer Accounts & Lifetime Value</h1>
+    <p class="page-subtitle">Manager overview of customer booking counts and cumulative rental spend (Read-Only).</p>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body" style="padding: 0;">
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Customer Name</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>License No.</th>
+            <th>City</th>
+            <th>Total Trips</th>
+            <th>Total Spend</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for c in customers %}
+            <tr>
+              <td><strong>#{{ c.custid }}</strong></td>
+              <td><strong>{{ c.name }}</strong></td>
+              <td>{{ c.phone }}</td>
+              <td>{{ c.email or '-' }}</td>
+              <td><code>{{ c.lic_no }}</code></td>
+              <td>{{ c.city }}</td>
+              <td>
+                <span class="badge badge-booked">{{ c.total_bookings }} trips</span>
+              </td>
+              <td>
+                <strong style="color: #15803d;">{{ c.total_spent|format_currency }}</strong>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

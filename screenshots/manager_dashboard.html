@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Executive Analytics - Fleet Manager</title>
+  <link rel="stylesheet" href="c:/sarvesh/placement preparations/projects/ganti1/vehicle_rental/app/static/style.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <h2>🚗 RentalCore</h2>
+        <div class="tagline">Enterprise Vehicle Fleet</div>
+      </div>
+
+      <nav class="sidebar-nav">
+        
+          <div class="nav-section-title">Executive Management</div>
+          <a href="/manager" class="nav-link active">
+            <span>📈</span> Analytics
+          </a>
+          <a href="/manager/dues" class="nav-link ">
+            <span>💰</span> Dues Report
+          </a>
+          <a href="/manager/maintenance" class="nav-link ">
+            <span>🔧</span> Maintenance
+          </a>
+          <a href="/manager/activity" class="nav-link ">
+            <span>📝</span> Activity Log
+          </a>
+          <div class="nav-section-title">Fleet Monitoring</div>
+          <a href="/manager/vehicles" class="nav-link ">
+            <span>🚘</span> Vehicles
+          </a>
+          <a href="/manager/customers" class="nav-link ">
+            <span>👥</span> Customers
+          </a>
+          <a href="/manager/bookings" class="nav-link ">
+            <span>📑</span> Bookings
+          </a>
+        
+
+        <div class="nav-section-title">Database Schema</div>
+        <a href="/tables" class="nav-link ">
+          <span>🗄️</span> Database Tables
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div>Oracle Database Free</div>
+        <div style="font-size: 0.72rem; color: #64748b; margin-top: 2px;">PL/SQL Business Rules</div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+      <!-- TOP HEADER -->
+      <header class="app-header">
+        <div class="header-left">
+          
+            <span class="portal-badge manager">General Manager</span>
+          
+        </div>
+
+        <div class="header-right">
+          <div class="user-info">
+            <span class="user-name">Fleet Manager</span>
+            <span class="user-role-label">Manager Role</span>
+          </div>
+          <a href="/logout" class="btn-logout">Sign Out</a>
+        </div>
+      </header>
+
+      <!-- PAGE BODY -->
+      <div class="page-container">
+        <!-- FLASH NOTIFICATIONS -->
+        
+          
+            <div class="alert-container">
+              
+                <div class="alert alert-info">
+                  <div>
+                    <strong>
+                      ℹ️ Info:
+                      
+                    </strong>
+                    You have been logged out successfully.
+                  </div>
+                </div>
+              
+                <div class="alert alert-success">
+                  <div>
+                    <strong>
+                      ✓ Success:
+                      
+                    </strong>
+                    Welcome back, Fleet Manager!
+                  </div>
+                </div>
+              
+            </div>
+          
+        
+
+        
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Executive Analytics Dashboard</h1>
+    <p class="page-subtitle">High-level financial summaries, operational yield, and fleet distribution.</p>
+  </div>
+  <a href="/manager/dues" class="btn btn-primary">
+    <span>💰</span> Open Dues Cursor Report
+  </a>
+</div>
+
+<!-- HEADLINE STAT CARDS -->
+<div class="card-grid">
+  <div class="stat-card stat-success">
+    <div class="stat-title">Total Revenue</div>
+    <div class="stat-value">Rs. 70,300</div>
+    <div class="stat-desc">Cumulative payments settled</div>
+  </div>
+
+  <div class="stat-card stat-danger">
+    <div class="stat-title">Total Pending Dues</div>
+    <div class="stat-value">Rs. 12,800</div>
+    <div class="stat-desc">Outstanding customer balances (f_bal)</div>
+  </div>
+
+  <div class="stat-card stat-warning">
+    <div class="stat-title">Maintenance Cost</div>
+    <div class="stat-value">Rs. 51,700</div>
+    <div class="stat-desc">Fleet repair and servicing expense</div>
+  </div>
+
+  <div class="stat-card stat-info">
+    <div class="stat-title">Vehicles on Rent</div>
+    <div class="stat-value">1 / 10</div>
+    <div class="stat-desc">Active commercial utilization</div>
+  </div>
+</div>
+
+<!-- ANALYTICS CHARTS SECTION (Pure CSS Bar Charts) -->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 28px;">
+  <!-- REVENUE BY CATEGORY -->
+  <div class="card" style="margin-bottom: 0;">
+    <div class="card-header">
+      <h3 class="card-title">Revenue by Vehicle Category</h3>
+      <span style="font-size: 0.8rem; color: #64748b;">Sorted by Total Yield</span>
+    </div>
+    <div class="card-body">
+      
+        <div class="analytics-bar-item">
+          <div class="bar-header">
+            <span>SUV (2 trips)</span>
+            <strong>Rs. 17,500</strong>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width: 100.0%;"></div>
+          </div>
+        </div>
+      
+        <div class="analytics-bar-item">
+          <div class="bar-header">
+            <span>Luxury (1 trip)</span>
+            <strong>Rs. 15,000</strong>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width: 85.7%;"></div>
+          </div>
+        </div>
+      
+        <div class="analytics-bar-item">
+          <div class="bar-header">
+            <span>Van (1 trip)</span>
+            <strong>Rs. 12,000</strong>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width: 68.6%;"></div>
+          </div>
+        </div>
+      
+        <div class="analytics-bar-item">
+          <div class="bar-header">
+            <span>MUV (1 trip)</span>
+            <strong>Rs. 11,200</strong>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width: 64.0%;"></div>
+          </div>
+        </div>
+      
+        <div class="analytics-bar-item">
+          <div class="bar-header">
+            <span>Hatchback (3 trips)</span>
+            <strong>Rs. 10,800</strong>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width: 61.7%;"></div>
+          </div>
+        </div>
+      
+        <div class="analytics-bar-item">
+          <div class="bar-header">
+            <span>Sedan (2 trips)</span>
+            <strong>Rs. 9,000</strong>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width: 51.4%;"></div>
+          </div>
+        </div>
+      
+        <div class="analytics-bar-item">
+          <div class="bar-header">
+            <span>Electric (1 trip)</span>
+            <strong>Rs. 6,600</strong>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width: 37.7%;"></div>
+          </div>
+        </div>
+      
+        <div class="analytics-bar-item">
+          <div class="bar-header">
+            <span>Bike (1 trip)</span>
+            <strong>Rs. 1,000</strong>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width: 5.7%;"></div>
+          </div>
+        </div>
+      
+        <div class="analytics-bar-item">
+          <div class="bar-header">
+            <span>Scooter (0 trips)</span>
+            <strong>Rs. 0</strong>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width: 0.0%;"></div>
+          </div>
+        </div>
+      
+        <div class="analytics-bar-item">
+          <div class="bar-header">
+            <span>Convertible (0 trips)</span>
+            <strong>Rs. 0</strong>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width: 0.0%;"></div>
+          </div>
+        </div>
+      
+    </div>
+  </div>
+
+  <!-- PAYMENTS BY MODE & FLEET SUMMARY -->
+  <div style="display: flex; flex-direction: column; gap: 24px;">
+    <!-- PAYMENTS BY MODE -->
+    <div class="card" style="margin-bottom: 0;">
+      <div class="card-header">
+        <h3 class="card-title">Payments by Mode</h3>
+        <span style="font-size: 0.8rem; color: #64748b;">Collections breakdown</span>
+      </div>
+      <div class="card-body">
+        
+          <div class="analytics-bar-item">
+            <div class="bar-header">
+              <span>CARD (3 transactions)</span>
+              <strong>Rs. 34,500</strong>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill bar-alt" style="width: 100.0%;"></div>
+            </div>
+          </div>
+        
+          <div class="analytics-bar-item">
+            <div class="bar-header">
+              <span>UPI (5 transactions)</span>
+              <strong>Rs. 31,200</strong>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill bar-alt" style="width: 90.4%;"></div>
+            </div>
+          </div>
+        
+          <div class="analytics-bar-item">
+            <div class="bar-header">
+              <span>CASH (2 transactions)</span>
+              <strong>Rs. 4,600</strong>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill bar-alt" style="width: 13.3%;"></div>
+            </div>
+          </div>
+        
+      </div>
+    </div>
+
+    <!-- FLEET STATUS SUMMARY -->
+    <div class="card" style="margin-bottom: 0;">
+      <div class="card-header">
+        <h3 class="card-title">Fleet Status Summary</h3>
+        <span style="font-size: 0.8rem; color: #64748b;">10 Total Assets</span>
+      </div>
+      <div class="card-body">
+        <div style="display: flex; gap: 12px; justify-content: space-around; text-align: center;">
+          <div style="padding: 12px 16px; background-color: var(--status-available-bg); border-radius: var(--radius-sm); flex: 1;">
+            <div style="font-size: 1.5rem; font-weight: 700; color: var(--status-available-text);">
+              8
+            </div>
+            <div style="font-size: 0.76rem; font-weight: 600; text-transform: uppercase; color: var(--status-available-text);">
+              Available
+            </div>
+          </div>
+
+          <div style="padding: 12px 16px; background-color: var(--status-rented-bg); border-radius: var(--radius-sm); flex: 1;">
+            <div style="font-size: 1.5rem; font-weight: 700; color: var(--status-rented-text);">
+              1
+            </div>
+            <div style="font-size: 0.76rem; font-weight: 600; text-transform: uppercase; color: var(--status-rented-text);">
+              On Rent
+            </div>
+          </div>
+
+          <div style="padding: 12px 16px; background-color: var(--status-service-bg); border-radius: var(--radius-sm); flex: 1;">
+            <div style="font-size: 1.5rem; font-weight: 700; color: var(--status-service-text);">
+              1
+            </div>
+            <div style="font-size: 0.76rem; font-weight: 600; text-transform: uppercase; color: var(--status-service-text);">
+              In Service
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+    </main>
+  </div>
+  
+</body>
+</html>
