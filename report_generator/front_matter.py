@@ -160,13 +160,6 @@ def build_front_matter(doc, assets_dir):
         "Engineering and Information Systems (SCOPE), VIT, Vellore, for his continuous guidance, valuable suggestions, "
         "and laboratory support throughout this semester. His insights helped me understand how theoretical database "
         "concepts like normalization, triggers, and cursors apply in practice.",
-        space_after=6
-    )
-    add_p(
-        doc,
-        "I also thank the laboratory staff and VIT for providing the computing facilities and software infrastructure. "
-        "Finally, I would like to thank my parents, friends, and peers for their continuous encouragement and support, "
-        "as well as the open-source community behind Oracle Database 26ai Free, Python, and Flask.",
         space_after=18
     )
 
