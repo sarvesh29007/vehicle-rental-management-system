@@ -42,3 +42,7 @@ venv.bak/
 Thumbs.db
 ehthumbs.db
 [Dd]esktop.ini
+
+# Temporary preview and test files
+test_page_num.*
+preview_page_*.*
