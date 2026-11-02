@@ -253,7 +253,7 @@ def build_chapters_5_to_8(doc, assets_dir):
     add_table_data(
         doc, "Table 6.1: BCNF check: every non-trivial determinant must be a superkey",
         ["Relation", "Determinants", "Is Determinant a Superkey?", "Normal Form Result"],
-        bcnf_data, [Inches(1.2), Inches(2.2), Inches(2.2), Inches(0.9)], font_size=8.5
+        bcnf_data, [Inches(1.2), Inches(2.2), Inches(2.2), Inches(0.9)], font_size=8
     )
     add_p(
         doc,
@@ -264,7 +264,7 @@ def build_chapters_5_to_8(doc, assets_dir):
         "If total were always computed on the fly by joining with the current category rate, old rental receipts would retroactively change their bill amount! "
         "Storing total fixes the agreed tariff at booking time and avoids expensive joins during reporting. "
         "The risk of calculation errors is completely avoided because trigger trg_bk_bi automatically calculates total at insertion time.",
-        space_after=8
+        space_after=4
     )
 
     add_h2(doc, "6.7 Lossless Join and Dependency Preservation")
@@ -273,7 +273,7 @@ def build_chapters_5_to_8(doc, assets_dir):
         "The decomposition is guaranteed to be Lossless because each decomposition step shares a foreign key that is a candidate key "
         "of the parent relation (for example, BOOKING.vid references VEHICLE.vid). "
         "Furthermore, all functional dependencies F1 to F8 are preserved within their individual tables.",
-        space_after=8
+        space_after=4
     )
 
     add_h2(doc, "6.8 Before-and-After Example")
@@ -285,13 +285,13 @@ def build_chapters_5_to_8(doc, assets_dir):
     add_table_data(
         doc, "Table 6.2: Before: flat relation (redundant vehicle, tariff, and branch attributes)",
         ["BKID", "Cust", "Phone", "Model", "Cat", "Rate", "Branch", "Start", "End", "Total"],
-        flat_data, [Inches(0.5), Inches(0.6), Inches(0.8), Inches(0.6), Inches(0.7), Inches(0.5), Inches(1.1), Inches(0.6), Inches(0.6), Inches(0.5)], font_size=7.5
+        flat_data, [Inches(0.5), Inches(0.6), Inches(0.8), Inches(0.6), Inches(0.7), Inches(0.5), Inches(1.1), Inches(0.6), Inches(0.6), Inches(0.5)], font_size=7
     )
     add_p(
         doc,
         "In Table 6.2, changing the Hatchback daily rate from 1200 to 1300 requires updating hundreds of rows. In the normalized schema (Table 6.3), "
         "the rate exists once in CATEGORY, vehicle 1 points to cid 1 and bid 1, and bookings reference vid 1 without repeating vehicle attributes.",
-        space_after=12
+        space_after=0
     )
 
     doc.add_page_break()
