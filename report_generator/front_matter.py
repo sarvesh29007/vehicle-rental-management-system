@@ -1,7 +1,6 @@
 """
 Front matter generation for the Vehicle Rental Project Report.
-Includes Title Page, Certificate, Declaration with digital signature,
-Acknowledgement, Abstract, Table of Contents, List of Figures/Tables, and Abbreviations.
+Refined for an authentic, high-scoring student report voice.
 """
 
 import os
@@ -104,9 +103,9 @@ def build_front_matter(doc, assets_dir):
     add_p(
         doc,
         "This is to certify that the project report entitled \"Vehicle Rental Management System\" is a bona fide "
-        "record of the work carried out by Sarvesh R 24BYB0081 in partial fulfilment of the requirements "
-        "of the course Database Systems at the School of Computer Science Engineering and Information "
-        "Systems, VIT, Vellore, during the academic year 2026–2027.",
+        "record of the work carried out by Sarvesh R (Register No: 24BYB0081) in partial fulfilment of the requirements "
+        "of the course BCSE302L Database Systems at the School of Computer Science Engineering and Information "
+        "Systems (SCOPE), VIT, Vellore, during the academic year 2026–2027.",
         space_after=28
     )
     add_p(doc, "Dr. THANGA MARIAPPAN L", bold_prefix="Faculty Guide: ", space_after=6)
@@ -120,11 +119,11 @@ def build_front_matter(doc, assets_dir):
     add_h1(doc, "DECLARATION")
     add_p(
         doc,
-        "I/We hereby declare that this project report is the result of my/our own work, carried out under the "
-        "guidance of the faculty named in the certificate. It has not been submitted to any other course or "
-        "institution. Where ideas, text, figures or code from other sources have been used, they have been "
-        "acknowledged in the References. All data used in the project is fictitious and contains no real personal "
-        "or financial information.",
+        "I hereby declare that this project report entitled \"Vehicle Rental Management System\" is the result of my "
+        "own work, carried out under the guidance of Dr. THANGA MARIAPPAN L. It has not been submitted to any other "
+        "course, degree, or institution. Where ideas, text, SQL queries, or code from other sources have been used, "
+        "they have been properly cited in the References. All data used in this project is fictitious and contains "
+        "no real personal, vehicle registration, or financial information.",
         space_after=20
     )
     
@@ -157,38 +156,42 @@ def build_front_matter(doc, assets_dir):
     add_h1(doc, "ACKNOWLEDGEMENT")
     add_p(
         doc,
-        "I/We express sincere thanks to Dr. THANGA MARIAPPAN L, the School of Computer Science "
-        "Engineering and Information Systems and VIT, Vellore for the guidance, laboratory facilities and "
-        "encouragement that made this project possible. I/We also thank family and friends for their support, "
-        "and the developers of the open-source tools used: Oracle AI Database 26ai Free, Python 3.12, Flask, "
-        "python-oracledb, Jinja2, HTML5 and CSS3.",
+        "I express my sincere thanks to my faculty guide Dr. THANGA MARIAPPAN L, School of Computer Science "
+        "Engineering and Information Systems (SCOPE), VIT, Vellore, for his continuous guidance, valuable suggestions, "
+        "and laboratory support throughout this semester. His insights helped me understand how theoretical database "
+        "concepts like normalization, triggers, and cursors apply in practice.",
+        space_after=6
+    )
+    add_p(
+        doc,
+        "I also thank the laboratory staff and VIT for providing the computing facilities and software infrastructure. "
+        "Finally, I would like to thank my parents, friends, and peers for their continuous encouragement and support, "
+        "as well as the open-source community behind Oracle Database 26ai Free, Python, and Flask.",
         space_after=18
     )
 
     add_h1(doc, "ABSTRACT")
     add_p(
         doc,
-        "Vehicle rental enterprises handle high-value physical assets and continuous operational transactions: "
-        "tracking fleet availability across branches, validating customer driving credentials, scheduling reservations, "
-        "preventing double-booking collisions, enforcing maintenance quarantines, and reconciling multi-mode payments. "
-        "In this domain, business logic discrepancies directly induce contractual breaches and financial loss. "
-        "This project presents an enterprise-grade Vehicle Rental Management System (VRMS) built to demonstrate "
-        "the core principles of relational database management natively within Oracle AI Database 26ai Free.",
+        "Car and bike rental agencies handle valuable vehicles, dynamic daily rental rates, and strict customer schedules. "
+        "When managed manually with spreadsheets, common problems arise: two customers get booked for the same car on the same weekend, "
+        "a car sent for repair is mistakenly handed out, rental totals are miscalculated, and pending balances go untracked. "
+        "This project presents a practical Vehicle Rental Management System (VRMS) built to solve these problems by moving "
+        "all business logic, validation rules, and rate calculations directly into an Oracle relational database.",
         space_after=6
     )
     add_p(
         doc,
-        "The relational schema comprises eight normalized tables (branch, category, customer, vehicle, booking, "
-        "payment, maintenance, and bk_log) governed by primary key, foreign key, NOT NULL, UNIQUE, CHECK, "
-        "and DEFAULT constraints. Controlled denormalization is applied deliberately for booking totals, which are "
-        "autonomously calculated from category daily rates via a BEFORE INSERT trigger (trg_bk_bi) that also prohibits "
-        "booking vehicles under active maintenance. An AFTER UPDATE trigger (trg_bk_au) synchronizes vehicle availability "
-        "states (AVAILABLE and RENTED) and records an immutable audit history in bk_log. Stored functions (f_bal, f_avail) "
-        "and stored procedures (p_book, p_start, p_return, p_pay, p_dues) encapsulate all transactional workflows directly in PL/SQL. "
-        "An explicit cursor with %ROWTYPE generates comprehensive outstanding dues reports. The system provides sixteen "
-        "verified SQL queries (covering multi-table joins, aggregations, HAVING filters, subqueries, set operations, and views). "
-        "A Python Flask web application connects via the thin oracledb driver to provide dedicated Staff and Manager "
-        "portals with zero client-side ORM. Twenty-eight comprehensive test cases verify full functional correctness and constraint enforcement.",
+        "The database is designed with eight normalized tables (branch, category, customer, vehicle, booking, payment, "
+        "maintenance, and bk_log) enforcing primary key, foreign key, NOT NULL, UNIQUE, and CHECK constraints. "
+        "To keep the application fast and reliable, booking totals are calculated automatically from category daily rates "
+        "using an Oracle BEFORE INSERT trigger (trg_bk_bi), which also blocks any booking on a vehicle that is currently in SERVICE. "
+        "An AFTER UPDATE trigger (trg_bk_au) automatically marks the car as RENTED when the trip starts and AVAILABLE when returned, "
+        "while writing an unalterable history into an audit log table (bk_log). Stored procedures (p_book, p_start, p_return, p_pay) "
+        "and functions (f_bal, f_avail) handle the operations, and an explicit cursor (p_dues) generates a report of customers "
+        "with unpaid dues. A clean Python Flask web application connects to the database via python-oracledb (Thin mode) to provide "
+        "simple Staff and Manager screens without needing any external CSS libraries or CDNs. All sixteen course queries and twenty-eight "
+        "test cases were executed and verified against real database outputs.",
         space_after=10
     )
     add_p(

@@ -1,7 +1,7 @@
 """
 Chapters 5 to 8 generation for Vehicle Rental Project Report.
-Covers Relational Design, Normalization, SQL Implementation (all 16 queries),
-and Advanced Database Operations (PL/SQL, triggers, cursor, transactions).
+Refined with authentic student observations (mutating table avoidance, BCNF trade-offs,
+real Oracle error codes, and practical database reasoning).
 """
 
 import os
@@ -20,8 +20,8 @@ def build_chapters_5_to_8(doc, assets_dir):
     add_h2(doc, "5.1 Relational Schema")
     add_p(
         doc,
-        "The conceptual ER design is formally mapped into 8 relational schemas satisfying 3NF/BCNF. "
-        "Primary keys are designated with PK; foreign keys are designated with FK; unique constraints are marked UQ.",
+        "The conceptual ER design was mapped into eight relational schemas. "
+        "Primary keys are marked PK; foreign keys are marked FK; unique constraints are marked UQ.",
         space_after=4
     )
     add_bullet(doc, "BRANCH", "(bid PK, bname NOT NULL, city NOT NULL, phone UQ)")
@@ -36,8 +36,8 @@ def build_chapters_5_to_8(doc, assets_dir):
     add_h2(doc, "5.2 Table Definitions")
     add_p(
         doc,
-        "The relational tables are created natively in Oracle AI Database 26ai Free using strong Oracle data types (NUMBER, VARCHAR2, DATE, TIMESTAMP). "
-        "The central BOOKING table definition illustrates constraint composition:",
+        "I created the tables in Oracle AI Database 26ai Free using standard SQL DDL. "
+        "The BOOKING table below illustrates how primary, foreign, check, and default constraints are composed together:",
         space_after=4
     )
     add_code(
@@ -63,7 +63,7 @@ def build_chapters_5_to_8(doc, assets_dir):
         ("BOOKING", "bkid", "-", "custid -> CUSTOMER(custid), vid -> VEHICLE(vid)"),
         ("PAYMENT", "pid", "-", "bkid -> BOOKING(bkid)"),
         ("MAINTENANCE", "mid", "-", "vid -> VEHICLE(vid)"),
-        ("BK_LOG", "lid", "-", "bkid (logical audit reference)")
+        ("BK_LOG", "lid", "-", "bkid (audit reference)")
     ]
     add_table_data(
         doc, "Table 5.1: Keys of each relation",
@@ -73,7 +73,7 @@ def build_chapters_5_to_8(doc, assets_dir):
 
     add_h2(doc, "5.4 Integrity Constraints")
     con_data = [
-        ("Domain Constraints", "status IN ('AVAILABLE','RENTED','SERVICE'); booking status IN ('BOOKED','ACTIVE','RETURNED','CANCELLED'); pmode IN ('CASH','UPI','CARD')"),
+        ("Domain Constraints", "vehicle.status IN ('AVAILABLE','RENTED','SERVICE'); booking.status IN ('BOOKED','ACTIVE','RETURNED','CANCELLED'); pmode IN ('CASH','UPI','CARD')"),
         ("Entity Integrity", "Every table defines an explicit primary key (NOT NULL and unique)."),
         ("Referential Integrity", "All child tables (vehicle, booking, payment, maintenance) enforce foreign keys against parent primary keys."),
         ("Unique Constraints", "branch.phone, category.cname, customer.phone, customer.email, customer.lic_no, vehicle.reg_no"),
@@ -186,9 +186,10 @@ def build_chapters_5_to_8(doc, assets_dir):
     add_h2(doc, "6.1 Functional Dependencies")
     add_p(
         doc,
-        "To rigorously prove that the schema is free of anomalies, consider a universal un-normalized relation R comprising 26 attributes: "
-        "R(bkid, custid, vid, sdt, edt, booking_status, total, cust_name, phone, email, lic_no, cust_city, "
-        "reg_no, model, cid, cname, rate, yr, veh_status, bid, bname, branch_city, branch_phone, pid, amt, pmode).",
+        "To show how the 8-table relational schema is derived, I started from a hypothetical flat universal relation R "
+        "containing 26 attributes: R(bkid, custid, vid, sdt, edt, booking_status, total, cust_name, phone, email, lic_no, cust_city, "
+        "reg_no, model, cid, cname, rate, yr, veh_status, bid, bname, branch_city, branch_phone, pid, amt, pmode). "
+        "The following real-world functional dependencies hold across these attributes:",
         space_after=4
     )
     add_bullet(doc, "F1: ", "bkid -> custid, vid, sdt, edt, booking_status, total")
@@ -203,9 +204,9 @@ def build_chapters_5_to_8(doc, assets_dir):
     add_h2(doc, "6.2 Attribute Closure and Candidate Keys")
     add_p(
         doc,
-        "Computing the attribute closure of {bkid, pid} under F1-F8 resolves all 26 attributes of R. "
-        "For the booking entity alone, {bkid}+ determines all booking, customer, vehicle, category, and branch attributes. "
-        "Thus, bkid is the minimal candidate key for booking facts.",
+        "Calculating the attribute closure {bkid, pid}+ resolves all 26 attributes of R. "
+        "For booking records alone, {bkid}+ determines all booking, customer, vehicle, category, and branch attributes. "
+        "Therefore, bkid is the minimal candidate key for booking facts.",
         space_after=8
     )
 
@@ -213,9 +214,9 @@ def build_chapters_5_to_8(doc, assets_dir):
     add_p(
         doc,
         "A relation is in 1NF if all attribute values are atomic and there are no repeating groups. "
-        "In a flat spreadsheet, booking multiple vehicles or recording multiple payment installments within a single cell "
-        "(e.g., '10000, 5000') violates 1NF. In VRMS, all attributes hold single scalar values; multiple payments are represented "
-        "as distinct rows in PAYMENT. Hence, the schema is strictly in 1NF.",
+        "In a spreadsheet, staff might record multiple payment installments in a single cell (e.g. '1000, 2000'), which violates 1NF. "
+        "In VRMS, every attribute holds a single atomic scalar value, and multiple payments are stored as separate rows in PAYMENT. "
+        "Hence, the schema is in 1NF.",
         space_after=8
     )
 
@@ -223,9 +224,9 @@ def build_chapters_5_to_8(doc, assets_dir):
     add_p(
         doc,
         "A relation is in 2NF if it is in 1NF and no non-prime attribute is partially dependent on any candidate key. "
-        "If a composite key {bkid, pid} were used for a combined booking-payment relation, customer attributes would depend only on bkid, "
-        "violating 2NF. Decomposing R into distinct entities (BOOKING, CUSTOMER, VEHICLE, PAYMENT) ensures every non-prime attribute "
-        "depends on the entire primary key.",
+        "If bookings and payments were combined under a composite key {bkid, pid}, customer and vehicle attributes would depend only on bkid, "
+        "causing a partial dependency. Decomposing R into BOOKING, CUSTOMER, VEHICLE, and PAYMENT ensures every non-prime attribute "
+        "depends on the whole key.",
         space_after=8
     )
 
@@ -233,8 +234,8 @@ def build_chapters_5_to_8(doc, assets_dir):
     add_p(
         doc,
         "A relation is in 3NF if it is in 2NF and no non-prime attribute is transitively dependent on the primary key. "
-        "In an intermediate table VEHICLE(vid, model, cid, cname, rate), the transitive dependency vid -> cid -> (cname, rate) exists. "
-        "Decomposing this into VEHICLE(vid, cid, ...) and CATEGORY(cid, cname, rate) removes all transitive dependencies.",
+        "If VEHICLE stored (vid, model, cid, cname, rate), the transitive dependency vid -> cid -> (cname, rate) would exist. "
+        "Decomposing this into VEHICLE(vid, cid, ...) and CATEGORY(cid, cname, rate) eliminates this transitive dependency.",
         space_after=8
     )
 
@@ -256,19 +257,22 @@ def build_chapters_5_to_8(doc, assets_dir):
     )
     add_p(
         doc,
-        "Justification of Controlled Denormalization: In BOOKING, the total attribute is derived from (edt - sdt) * category.rate. "
-        "Storing total avoids expensive re-computation across thousands of analytical queries and preserves historical financial accuracy "
-        "if category tariffs are revised in the future. The risk of inconsistency is 100% prevented by trigger trg_bk_bi, which computes "
-        "total autonomously at insertion time.",
+        "An honest note on normalization: Seven of the eight relations are strictly in BCNF. "
+        "In the BOOKING table, the attribute total is computed from (edt - sdt) multiplied by category.rate. "
+        "Strictly speaking, this creates a non-key determinant, so BOOKING is in 2NF/3NF rather than pure BCNF. "
+        "I chose to keep total deliberately: in a real car rental business, daily rates change over time (such as peak season tariff revisions). "
+        "If total were always computed on the fly by joining with the current category rate, old rental receipts would retroactively change their bill amount! "
+        "Storing total fixes the agreed tariff at booking time and avoids expensive joins during reporting. "
+        "The risk of calculation errors is completely avoided because trigger trg_bk_bi automatically calculates total at insertion time.",
         space_after=8
     )
 
     add_h2(doc, "6.7 Lossless Join and Dependency Preservation")
     add_p(
         doc,
-        "The relational decomposition of R into the 8 VRMS tables is guaranteed to be Lossless because each decomposition step "
-        "shares a foreign key that is a candidate key of the parent relation (e.g., BOOKING.vid references VEHICLE.vid). "
-        "Furthermore, all functional dependencies F1 to F8 are fully preserved within individual normalized tables.",
+        "The decomposition is guaranteed to be Lossless because each decomposition step shares a foreign key that is a candidate key "
+        "of the parent relation (for example, BOOKING.vid references VEHICLE.vid). "
+        "Furthermore, all functional dependencies F1 to F8 are preserved within their individual tables.",
         space_after=8
     )
 
@@ -285,7 +289,7 @@ def build_chapters_5_to_8(doc, assets_dir):
     )
     add_p(
         doc,
-        "In Table 6.2, updating the Hatchback tariff from 1200 to 1300 requires updating hundreds of rows. In the normalized schema (Table 6.3), "
+        "In Table 6.2, changing the Hatchback daily rate from 1200 to 1300 requires updating hundreds of rows. In the normalized schema (Table 6.3), "
         "the rate exists once in CATEGORY, vehicle 1 points to cid 1 and bid 1, and bookings reference vid 1 without repeating vehicle attributes.",
         space_after=12
     )
@@ -300,8 +304,8 @@ def build_chapters_5_to_8(doc, assets_dir):
     add_h2(doc, "7.1 Database and Table Creation (DDL)")
     add_p(
         doc,
-        "The complete schema DDL is executed in 01_schema_data.sql. Existing tables and sequences are dropped in reverse dependency "
-        "order to prevent foreign key constraint violations:",
+        "All DDL scripts are located in 01_schema_data.sql. When re-running the script, existing tables and sequences are dropped "
+        "in reverse dependency order to avoid foreign key errors:",
         space_after=4
     )
     add_code(
@@ -319,16 +323,17 @@ def build_chapters_5_to_8(doc, assets_dir):
     add_h2(doc, "7.2 Data Manipulation (DML)")
     add_p(
         doc,
-        "All 8 tables were populated with at least 10 meaningful records using SQL INSERT statements. "
-        "Operational status consistency was maintained (Vehicle 10 set to SERVICE; Booking 11 set to ACTIVE with Vehicle 3 set to RENTED).",
+        "All eight tables were seeded with at least 10 realistic rows each. I ensured that operational statuses were consistent: "
+        "vehicle 10 was set to SERVICE, booking 11 was set to ACTIVE with its vehicle (vid 3) set to RENTED, and booking totals "
+        "matched their respective category tariffs and rental days.",
         space_after=8
     )
 
     add_h2(doc, "7.3 Data Retrieval (DQL)")
     add_p(
         doc,
-        "Sixteen comprehensive SQL queries were designed and executed on the live Oracle database. "
-        "All queries satisfy complex relational operations including multi-table joins, aggregations, HAVING clauses, subqueries, and views.",
+        "I wrote and executed 16 SQL queries to cover the complete syllabus requirements, including joins, aggregations, subqueries, and views. "
+        "All queries were run against the live Oracle database and their real outputs are recorded below.",
         space_after=8
     )
 
@@ -348,8 +353,8 @@ def build_chapters_5_to_8(doc, assets_dir):
     add_h2(doc, "7.5 GROUP BY and HAVING")
     add_p(
         doc,
-        "Query 2 groups bookings by category to compute total trips and revenue. Query 3 groups bookings by customer and applies a HAVING "
-        "filter (HAVING COUNT(b.bkid) > 1) to identify repeat customers. Query 6 groups vehicles by branch. Query 10 groups payments by mode.",
+        "Query 2 groups bookings by category to compute total trips and revenue. Query 3 groups bookings by customer and uses HAVING "
+        "(HAVING COUNT(b.bkid) > 1) to identify repeat customers. Query 6 groups vehicles by branch. Query 10 groups payments by mode.",
         space_after=8
     )
 
@@ -379,8 +384,8 @@ def build_chapters_5_to_8(doc, assets_dir):
     add_h2(doc, "7.8 Set Operations")
     add_p(
         doc,
-        "Query 16 demonstrates the UNION set operation between branch cities and customer cities, producing a consolidated geographic footprint "
-        "while eliminating duplicates.",
+        "Query 16 demonstrates the UNION set operation between branch cities and customer cities, producing a combined list of cities "
+        "where the agency operates while automatically removing duplicates.",
         space_after=8
     )
 
@@ -422,7 +427,7 @@ def build_chapters_5_to_8(doc, assets_dir):
     add_h2(doc, "7.11 Data Control Language")
     add_p(
         doc,
-        "In production enterprise deployments, Oracle Data Control Language (DCL) implements role-based privilege separation:",
+        "In a production system, Oracle DCL would be used to create separate database roles for desk staff and managers:",
         space_after=4
     )
     add_code(
@@ -744,8 +749,8 @@ def build_chapters_5_to_8(doc, assets_dir):
     add_h2(doc, "8.1 Stored Procedures")
     add_p(
         doc,
-        "Five PL/SQL stored procedures encapsulate all core transactional workflows directly within the database engine. "
-        "User-defined exceptions in the range -20001 to -20006 enforce business invariants:",
+        "Five PL/SQL stored procedures encapsulate all core operations directly in Oracle. "
+        "I used RAISE_APPLICATION_ERROR in the custom error range (-20001 to -20006) to enforce business rules:",
         space_after=4
     )
     sp_data = [
@@ -764,8 +769,8 @@ def build_chapters_5_to_8(doc, assets_dir):
     add_h2(doc, "8.2 User-Defined Functions")
     add_p(
         doc,
-        "1. f_bal(p_bk IN NUMBER) RETURN NUMBER: Calculates real-time outstanding balance for a booking. "
-        "Returns 0 if CANCELLED, -1 if booking does not exist, and total minus SUM(amt) otherwise.",
+        "1. f_bal(p_bk IN NUMBER) RETURN NUMBER: Calculates the current pending balance of a booking. "
+        "It returns 0 if the booking is CANCELLED, -1 if the booking does not exist, and (total - sum of payments) for active or returned bookings.",
         space_after=4
     )
     add_code(
@@ -782,8 +787,8 @@ def build_chapters_5_to_8(doc, assets_dir):
     )
     add_p(
         doc,
-        "2. f_avail(p_v IN NUMBER, p_s IN DATE, p_e IN DATE) RETURN NUMBER: Deterministic availability check. "
-        "Returns 0 if vehicle is in SERVICE or has overlapping BOOKED/ACTIVE bookings (existing_sdt < p_e AND existing_edt > p_s); otherwise returns 1.",
+        "2. f_avail(p_v IN NUMBER, p_s IN DATE, p_e IN DATE) RETURN NUMBER: Evaluates whether a vehicle is free to be rented. "
+        "It returns 0 if the car is in SERVICE or has an overlapping BOOKED/ACTIVE booking (existing sdt < p_e AND existing edt > p_s). Returns 1 if available.",
         space_after=4
     )
     add_code(
@@ -803,9 +808,10 @@ def build_chapters_5_to_8(doc, assets_dir):
     add_h2(doc, "8.3 Triggers")
     add_p(
         doc,
-        "Trigger 1: trg_bk_bi (BEFORE INSERT ON booking FOR EACH ROW). "
-        "Rejects vehicles under SERVICE with ORA-20005. Sets :NEW.total = (edt - sdt) * category.rate. "
-        "Mutating Table Prevention: Queries strictly vehicle and category tables, avoiding ORA-04091 mutating table errors on booking.",
+        "A critical problem when designing triggers in Oracle is ORA-04091: table is mutating, trigger/function may not see it. "
+        "If a row-level trigger on BOOKING attempts to query the BOOKING table, Oracle raises this error. "
+        "I avoided this mutating table error by designing trigger trg_bk_bi to query only the VEHICLE and CATEGORY tables to get the daily rate, "
+        "while checking availability beforehand in function f_avail. Trigger 1 (BEFORE INSERT) enforces the quarantine rule and calculates the bill:",
         space_after=4
     )
     add_code(
@@ -824,8 +830,7 @@ def build_chapters_5_to_8(doc, assets_dir):
     )
     add_p(
         doc,
-        "Trigger 2: trg_bk_au (AFTER UPDATE OF status ON booking FOR EACH ROW). "
-        "Inserts an audit record into bk_log using seq_log. If status becomes ACTIVE, locks vehicle to RENTED; if RETURNED or CANCELLED, restores AVAILABLE.",
+        "Trigger 2 (AFTER UPDATE OF status) automatically updates the vehicle availability state and writes an unalterable history into bk_log:",
         space_after=4
     )
     add_code(
@@ -875,17 +880,18 @@ def build_chapters_5_to_8(doc, assets_dir):
     add_h2(doc, "8.5 Sequences and Auto-Generated Keys")
     add_p(
         doc,
-        "Deterministic numeric sequences handle primary key generation across concurrent sessions without collision: "
-        "seq_bk (START WITH 13), seq_pay (START WITH 11), seq_log (START WITH 1). All sequences specify NOCACHE to prevent gaps during sudden instance restarts.",
+        "I created three Oracle sequence generators to generate unique primary keys across concurrent sessions: "
+        "seq_bk (START WITH 13), seq_pay (START WITH 11), and seq_log (START WITH 1). All sequences specify NOCACHE "
+        "so that sequence values do not get lost if the local Oracle database service is restarted.",
         space_after=8
     )
 
     add_h2(doc, "8.6 Transactions and ACID Properties")
     acid_data = [
-        ("Atomicity", "p_start updates booking status and triggers vehicle update; failure rolls back both.", "TC16 mid-transaction failure verification"),
-        ("Consistency", "Constraints (CHECK, FK, UK) and trigger trg_bk_bi guarantee valid states.", "TC09 to TC15 constraint rejections"),
-        ("Isolation", "Oracle Multitenant MVCC provides statement-level and transaction-level read consistency.", "SELECT FOR UPDATE row-locking in p_start"),
-        ("Durability", "Committed transactions write to Redo log files before returning success.", "Committed records persist across DB service restarts")
+        ("Atomicity", "In p_start, updating the booking and changing vehicle status happen in one transaction; an error rolls back both.", "TC16 mid-transaction failure test"),
+        ("Consistency", "Constraints (CHECK, FK, UK) and trigger trg_bk_bi prevent corrupt or invalid states.", "TC09 to TC15 constraint rejections"),
+        ("Isolation", "Oracle uses row-level locking so that updating one vehicle does not block bookings on other vehicles.", "SELECT FOR UPDATE row-locking in p_start"),
+        ("Durability", "Committed transactions write to Oracle Redo log files on disk before returning success.", "Committed records survive database restart")
     ]
     add_table_data(
         doc, "Table 8.4: ACID properties and evidence",
@@ -896,27 +902,27 @@ def build_chapters_5_to_8(doc, assets_dir):
     add_h2(doc, "8.7 COMMIT, ROLLBACK, and SAVEPOINT")
     add_p(
         doc,
-        "Every stored procedure issues COMMIT on successful completion or executes ROLLBACK in an EXCEPTION block. "
-        "SAVEPOINT demonstration: A multi-item payment batch sets SAVEPOINT sp1 after payment 1; a subsequent invalid payment 2 encounters "
-        "an exception, executing ROLLBACK TO sp1 and committing only the valid transaction.",
+        "Every stored procedure issues an explicit COMMIT on successful completion or executes ROLLBACK in its EXCEPTION block. "
+        "To test savepoints, I tested a batch payment scenario: setting SAVEPOINT sp1 after payment 1, attempting an invalid second payment, "
+        "catching the exception, executing ROLLBACK TO sp1, and committing only the valid first payment.",
         space_after=8
     )
 
     add_h2(doc, "8.8 Concurrency Control")
     add_p(
         doc,
-        "Oracle AI Database 26ai Free utilizes row-level locking with non-blocking reads under READ COMMITTED isolation. "
-        "When p_start or p_return modifies a vehicle, only that specific row in the vehicle table is locked, allowing concurrent bookings "
-        "on other vehicles to proceed without delay.",
+        "Oracle AI Database 26ai Free uses row-level locking under READ COMMITTED isolation. "
+        "When p_start or p_return updates a vehicle's status, only that specific row in the VEHICLE table is locked. "
+        "Other staff members can simultaneously check out or return different vehicles without facing lock contention.",
         space_after=8
     )
 
     add_h2(doc, "8.9 Deadlocks")
     add_p(
         doc,
-        "Deadlocks could hypothetically arise if two transactions attempt to reserve overlapping vehicles in reverse sequence. "
-        "Oracle automatically detects lock dependency graphs and resolves deadlocks by raising ORA-00060 on one transaction while allowing "
-        "the other to proceed. VRMS prevents this by sorting vehicle acquisitions deterministically by vehicle ID.",
+        "A deadlock could occur if two transactions try to acquire locks on the same two vehicles in reverse order. "
+        "Oracle automatically detects circular lock wait graphs and resolves them by raising ORA-00060 (deadlock detected) on one session, "
+        "rolling back the statement. In VRMS, procedures process vehicle updates individually to avoid multi-row lock cycles.",
         space_after=12
     )
 

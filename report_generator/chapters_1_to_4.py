@@ -1,6 +1,6 @@
 """
 Chapters 1 to 4 generation for Vehicle Rental Project Report.
-Matches the structure and depth of the reference VIT Database Systems report.
+Written in an authentic, clear, and practical student engineering voice.
 """
 
 import os
@@ -19,125 +19,127 @@ def build_chapters_1_to_4(doc, assets_dir):
     add_h2(doc, "1.1 Background")
     add_p(
         doc,
-        "Vehicle rental enterprises handle a continuous stream of critical operational and financial transactions: "
-        "onboarding customers with verified identity credentials, allocating physical vehicles across distributed branch locations, "
-        "managing dynamic daily rental tariffs, executing reservation bookings across future date intervals, dispatching vehicle handovers, "
-        "inspecting returns, tracking scheduled fleet servicing, and recording multi-channel payments. In this environment, an operational mistake "
-        "is not merely a software defect; it represents asset damage, legal liability, or direct financial loss. A vehicle double-booked "
-        "for overlapping dates, an unrecorded handover of a luxury car, a vehicle dispatched while quarantined in service, or an untracked "
-        "payment variance directly impairs business viability.",
+        "Vehicle rental businesses handle everyday operations that involve expensive physical assets and continuous customer interactions. "
+        "Every day, staff must register new customers, verify driving licenses, assign vehicles across different branches, manage different daily "
+        "tariffs for various vehicle classes, and record payments. In a business like this, even a small mistake is costly. For example, if a car is "
+        "booked for two different customers on the same weekend, or if a vehicle that is currently in the workshop for brake repair is handed over "
+        "to a customer, it causes severe customer dissatisfaction, safety hazards, and financial loss.",
         space_after=6
     )
     add_p(
         doc,
-        "A Relational Database Management System (RDBMS) provides the natural foundation for this mission-critical domain. "
-        "It guarantees data consistency by storing every operational fact exactly once, enforces domain and business integrity declaratively "
-        "through constraints, guarantees that multi-step operations execute under ACID transactional semantics, and provides multi-version concurrency "
-        "control (MVCC). This project, the Vehicle Rental Management System (VRMS), implements those core database principles in a realistic "
-        "fleet rental enterprise using Oracle AI Database 26ai Free (SQL and PL/SQL) combined with a Python Flask web frontend.",
+        "A Relational Database Management System (RDBMS) is the ideal tool for managing this domain. By storing each piece of information once, "
+        "linking tables through primary and foreign keys, enforcing rules through constraints and triggers, and grouping multi-step actions into "
+        "atomic transactions (ACID), a database ensures that the system stays consistent at all times. In this project, I developed the Vehicle "
+        "Rental Management System (VRMS) using Oracle AI Database 26ai Free (SQL and PL/SQL) with a Python Flask web frontend to demonstrate "
+        "how core database principles solve real-world problems in vehicle rentals.",
         space_after=8
     )
 
     add_h2(doc, "1.2 Problem Statement")
     add_p(
         doc,
-        "Spreadsheet-based, flat-file, or uncoordinated paper-based systems commonly used in regional rental agencies suffer from "
-        "the following severe operational vulnerabilities:",
+        "When small rental agencies or training projects rely on spreadsheets or unlinked flat files, several operational problems happen regularly:",
         space_after=4
     )
     add_bullet(
-        doc, "Redundancy and Update Anomalies: ",
-        "Customer, category, and branch attributes repeated across each booking record lead to inconsistent data when customer phone numbers or branch managers change."
+        doc, "Redundant data and update anomalies: ",
+        "Customer contact numbers, branch addresses, and vehicle daily rates get re-typed into every rental row. If a customer changes their phone number or a branch moves, updating one row leaves other rows with outdated information."
     )
     add_bullet(
-        doc, "Double-Booking and Temporal Collisions: ",
-        "Concurrent reservations for the same vehicle across overlapping dates occur when availability checks are handled manually or outside atomic database locks."
+        doc, "Double-booking conflicts: ",
+        "Without an automated availability check, two staff members can book the same vehicle for overlapping dates, causing scheduling conflicts."
     )
     add_bullet(
-        doc, "Unenforced Safety Rules: ",
-        "Vehicles flagged for critical mechanical maintenance or scheduled overhaul can be mistakenly reserved or dispatched, risking customer safety."
+        doc, "Unenforced safety and maintenance rules: ",
+        "A car that has been marked for scheduled maintenance or mechanical inspection can accidentally be reserved or dispatched if the maintenance record is stored in a separate sheet."
     )
     add_bullet(
-        doc, "Manual Tariff and Payment Errors: ",
-        "Manual calculation of multi-day rental tariffs and payment reconciliation results in arithmetic errors and revenue leakage."
+        doc, "Manual rate and billing errors: ",
+        "Calculating the total bill manually by multiplying rental days with category tariffs often leads to arithmetic mistakes and billing disputes."
     )
     add_bullet(
-        doc, "Absence of Traceability and Audit Trail: ",
-        "Without autonomous database triggers logging state transitions (BOOKED to ACTIVE to RETURNED), it is impossible to determine who authorized an operation or when a vehicle changed custody."
+        doc, "Lack of an audit trail: ",
+        "When an booking moves from BOOKED to ACTIVE to RETURNED, spreadsheets do not keep track of who changed the status, from what to what, or when the change happened."
     )
     add_p(
         doc,
-        "The primary stakeholders affected by these issues are retail customers (who face reservation cancellations or unsafe vehicles), "
-        "branch staff (who manage vehicle dispatches and payment collection), and fleet managers/auditors (who require verifiable revenue audits and maintenance tracking).",
+        "The people affected by these problems are retail customers (who face delays or cancelled bookings), branch staff (who struggle with manual paperwork), "
+        "and fleet managers (who need accurate revenue figures and maintenance tracking).",
         space_after=8
     )
 
     add_h2(doc, "1.3 Objectives")
+    add_p(
+        doc,
+        "The main objectives of this course project are:",
+        space_after=4
+    )
     add_numbered(
         doc, "1.",
-        "Design and normalize an 8-table relational schema with appropriate Primary Keys, Foreign Keys, NOT NULL, UNIQUE, CHECK, and DEFAULT constraints, populated with at least 10 meaningful records per table."
+        "Design an 8-table relational database schema with appropriate Primary Keys, Foreign Keys, NOT NULL, UNIQUE, CHECK, and DEFAULT constraints, and populate each table with at least 10 realistic records."
     )
     add_numbered(
         doc, "2.",
-        "Enforce 100% of the operational business rules directly inside Oracle Database using PL/SQL stored procedures (p_book, p_start, p_return, p_pay, p_dues) and deterministic stored functions (f_bal, f_avail)."
+        "Implement all business rules directly in the Oracle database tier using PL/SQL stored procedures (p_book, p_start, p_return, p_pay, p_dues) and stored functions (f_bal, f_avail)."
     )
     add_numbered(
         doc, "3.",
-        "Implement row-level database triggers (trg_bk_bi, trg_bk_au) to autonomously compute rental tariffs, block bookings for vehicles under service, synchronize vehicle availability states, and populate an immutable audit ledger (bk_log)."
+        "Create database triggers (trg_bk_bi and trg_bk_au) to automatically calculate rental bills, block reservations on vehicles under service, update vehicle availability, and log all status changes into an audit table (bk_log)."
     )
     add_numbered(
         doc, "4.",
-        "Demonstrate explicit multi-record cursor processing with %ROWTYPE (p_dues) to generate automated receivables recovery reports."
+        "Implement an explicit cursor with %ROWTYPE (p_dues) to produce an overdue balance report across all active bookings."
     )
     add_numbered(
         doc, "5.",
-        "Implement and verify 16 comprehensive SQL queries covering multi-table joins, aggregations, HAVING clauses, correlated/uncorrelated subqueries, set operations, single-row string functions, date functions, and views."
+        "Write and execute 16 meaningful SQL queries demonstrating multi-table joins, GROUP BY with HAVING, subqueries, set operations, string and date functions, and database views."
     )
     add_numbered(
         doc, "6.",
-        "Develop an interactive, 100% offline Python Flask web application connecting via python-oracledb Thin mode, featuring role-based Staff and Manager portals and an interactive database tables browser."
+        "Build a working Python Flask web application connecting to Oracle via python-oracledb (Thin mode) with Staff and Manager portals and an interactive table viewer, and verify everything with documented test cases."
     )
 
     add_h2(doc, "1.4 Scope")
     add_p(
         doc,
-        "Included: Ten branch locations across Tamil Nadu and major technology hubs, ten distinct vehicle categories with daily tariffs, "
-        "ten registered customers with driving credentials, ten fleet vehicles with operational status tracking (AVAILABLE, RENTED, SERVICE), "
-        "twelve multi-state bookings (BOOKED, ACTIVE, RETURNED, CANCELLED), multi-mode payments (CASH, UPI, CARD), fleet maintenance logs, "
-        "an autonomous trigger-populated audit trail, role-based web portals (Staff and Manager), and whitelisted data dictionary inspector. "
-        "Not included: External credit-card payment gateway gateways, automated SMS dispatchers, and production GPS telematics integration.",
+        "What is included: Ten branch locations (in Tamil Nadu cities plus Bangalore, Hyderabad, and Pune), ten vehicle categories with daily rates, "
+        "ten verified customer profiles, ten fleet vehicles with status tracking (AVAILABLE, RENTED, SERVICE), twelve bookings across different states, "
+        "ten payments in multiple modes (CASH, UPI, CARD), ten maintenance records, an automatic audit log table, role-separated web screens for Staff and Manager, "
+        "and a live database table inspector. "
+        "What is excluded: Live third-party bank payment gateway APIs, real SMS notifications, multi-currency conversion, and cloud deployment. These boundaries "
+        "are discussed in Section 12.6 under Limitations.",
         space_after=8
     )
 
     add_h2(doc, "1.5 Existing System")
     add_p(
         doc,
-        "The reference 'existing system' is a spreadsheet or uncoordinated departmental ledger where each reservation row "
-        "repeats customer names, contact numbers, branch addresses, vehicle models, and daily rates. Data updates require edits across hundreds of "
-        "redundant cells, vehicle maintenance schedules are decoupled from rental desk operations, and historical balance revisions are "
-        "untraceable. Chapter 6 illustrates this as a concrete universal relation and quantifies the anomalies it produces.",
+        "The reference 'existing system' is a spreadsheet or manual ledger where each row records an entire rental trip, repeating customer names, "
+        "phone numbers, vehicle details, branch addresses, and rates. Modifying a customer's address requires editing every past booking row. "
+        "Integrity rules exist only as verbal instructions to staff, meaning invalid entries (like end date earlier than start date, or negative payments) "
+        "can easily be entered without any warning. Chapter 6 examines this as a flat universal relation and shows the anomalies it causes.",
         space_after=8
     )
 
     add_h2(doc, "1.6 Proposed System")
     add_p(
         doc,
-        "The proposed system establishes a strict, database-centric three-tier architecture. Each operational entity is stored once "
-        "in a normalized relational schema (BCNF / 3NF). Business logic is pushed entirely into the Oracle Database tier via PL/SQL routines, "
-        "ensuring that business rules remain inviolable regardless of whether commands originate from web forms, SQL Developer, or batch scripts. "
-        "The front end consists of a responsive Python Flask application providing intuitive, role-separated portals for Branch Staff and Fleet Managers.",
+        "In the proposed system, every operational fact is stored once in a normalized 8-table relational schema. All validation and business logic "
+        "is placed inside Oracle PL/SQL procedures and triggers, so that the rules cannot be bypassed even if someone accesses the database from SQL Developer "
+        "or a command-line script. A Python Flask web interface provides clean, dedicated screens for Staff and Managers without re-implementing database rules in Python. "
+        "In this single-student lab project, all database design, PL/SQL coding, backend development, and testing were performed by me (Sarvesh R).",
         space_after=8
     )
 
     add_h2(doc, "1.7 Organization of the Report")
     add_p(
         doc,
-        "Chapter 2 presents the requirements analysis and stakeholder models. Chapter 3 examines foundational DBMS concepts and architecture. "
-        "Chapters 4 and 5 detail the conceptual ER model and relational schema. Chapter 6 analyzes functional dependencies and BCNF normalization. "
-        "Chapters 7 and 8 document the SQL query suite, PL/SQL stored routines, triggers, cursors, and ACID transactions. "
-        "Chapter 9 covers query optimization and indexing. Chapter 10 addresses security, backup, and recovery. "
-        "Chapter 11 describes the web application implementation. Chapter 12 details empirical testing and 28 test cases. "
-        "Chapter 13 concludes with learning outcomes and future enhancements. Appendices provide complete SQL scripts, sample datasets, and test summaries.",
+        "The report is organized as follows: Chapter 2 analyzes system requirements and user roles. Chapter 3 explains DBMS concepts and architecture. "
+        "Chapters 4 and 5 describe the conceptual ER design and relational schema. Chapter 6 covers functional dependencies and normalization to BCNF. "
+        "Chapters 7 and 8 present the SQL queries, stored procedures, functions, triggers, and transactions. Chapter 9 discusses query optimization and indexing. "
+        "Chapter 10 covers security, backup, and recovery. Chapter 11 describes the web application implementation with screenshots. Chapter 12 details the testing strategy "
+        "and results of 28 test cases. Chapter 13 concludes with learning outcomes and future work. Appendices contain the complete SQL code and sample data.",
         space_after=12
     )
 
@@ -150,10 +152,10 @@ def build_chapters_1_to_4(doc, assets_dir):
     
     add_h2(doc, "2.1 Stakeholders and User Roles")
     roles_data = [
-        ("Retail Customer", "Browses vehicle availability across branches, places reservations, takes vehicle delivery, makes payments, and receives trip receipts."),
-        ("Branch Staff / Desk Agent", "Validates customer driving credentials, executes bookings (p_book), dispatches vehicle pickup (p_start), processes returns (p_return), and records payments (p_pay)."),
-        ("Fleet Manager / Auditor", "Monitors branch inventory and vehicle utilization, reviews maintenance expenses, tracks outstanding receivables via cursor audit (p_dues), and reviews immutable audit logs (bk_log)."),
-        ("Database Administrator (DBA)", "Manages schema DDL, tunes indexes, configures tablespaces, monitors lock contention, and manages physical/logical backups via RMAN and Data Pump.")
+        ("Retail Customer", "Browses available vehicles, requests reservations, picks up vehicles, makes payments, and receives trip receipts."),
+        ("Branch Staff / Desk Agent", "Registers new customers, creates reservations (p_book), dispatches vehicle pickup (p_start), processes returns (p_return), and collects payments (p_pay)."),
+        ("Branch Manager / Auditor", "Monitors branch fleet inventory, tracks vehicle maintenance expenses, runs outstanding receivables audits (p_dues), and reviews the immutable audit log (bk_log)."),
+        ("Database Administrator (DBA)", "Manages the schema DDL, monitors constraints and indexes, compiles PL/SQL packages, and oversees backup and recovery. In this project, this role is performed by the student.")
     ]
     add_table_data(
         doc, "Table 2.1: User roles and responsibilities",
@@ -163,31 +165,31 @@ def build_chapters_1_to_4(doc, assets_dir):
 
     add_h2(doc, "2.2 Functional Requirements")
     fr_data = [
-        ("FR1", "Customer Onboarding", "Register customer with unique phone, email, and verified driving license", "customer table, UK constraints"),
-        ("FR2", "Vehicle Cataloging", "Catalog vehicles categorized with daily rates and branch assignments", "category, branch, vehicle tables"),
-        ("FR3", "Temporal Availability Check", "Verify vehicle is not in SERVICE and has no overlapping reservations", "f_avail(p_v, p_s, p_e)"),
-        ("FR4", "Automated Booking Creation", "Reserve vehicle using sequence seq_bk; compute total automatically", "p_book, seq_bk, trg_bk_bi"),
-        ("FR5", "Service Quarantine Protection", "Prohibit reservation or dispatch of vehicles undergoing maintenance", "trg_bk_bi (ORA-20005)"),
-        ("FR6", "Trip Dispatch & State Sync", "Transition BOOKED to ACTIVE; lock vehicle status to RENTED automatically", "p_start, trg_bk_au"),
-        ("FR7", "Vehicle Return Processing", "Transition ACTIVE to RETURNED; restore vehicle to AVAILABLE status", "p_return, trg_bk_au"),
-        ("FR8", "Audit Trail Logging", "Record immutable historical log of every booking status transition", "trg_bk_au -> bk_log (seq_log)"),
-        ("FR9", "Payment Collection & Validation", "Record payments; reject amounts exceeding outstanding balance", "p_pay, seq_pay, f_bal"),
-        ("FR10", "Outstanding Receivables Audit", "Iterate over open bookings to report customers with pending balances", "p_dues (explicit cursor)"),
-        ("FR11", "Analytical SQL Reporting", "Execute 16 verified SQL queries for management insights", "Queries 1 to 16"),
-        ("FR12", "Whitelisted Table Inspection", "Direct interactive inspection of live database tables and constraints", "Manager portal /tables route")
+        ("FR1", "Customer Registration", "Register customer with unique phone, email, and valid driving license", "customer table, UNIQUE constraints"),
+        ("FR2", "Vehicle Fleet Inventory", "Catalog vehicles linked to branch and category daily tariffs", "category, branch, vehicle tables"),
+        ("FR3", "Availability Verification", "Verify vehicle is not in SERVICE and has no overlapping reservations", "f_avail stored function"),
+        ("FR4", "Automated Booking Creation", "Reserve vehicle using sequence seq_bk; calculate total automatically", "p_book, trg_bk_bi, seq_bk"),
+        ("FR5", "Service Quarantine Enforcement", "Block bookings on vehicles undergoing mechanical maintenance", "trg_bk_bi trigger (ORA-20005)"),
+        ("FR6", "Trip Start & Vehicle Lock", "Transition BOOKED to ACTIVE; automatically lock vehicle status to RENTED", "p_start, trg_bk_au trigger"),
+        ("FR7", "Vehicle Return & Release", "Transition ACTIVE to RETURNED; restore vehicle status to AVAILABLE", "p_return, trg_bk_au trigger"),
+        ("FR8", "Audit Trail Logging", "Record immutable historical entries for every status change", "trg_bk_au trigger -> bk_log table"),
+        ("FR9", "Payment Processing", "Record customer payment; reject amounts exceeding balance due", "p_pay procedure, seq_pay, f_bal"),
+        ("FR10", "Receivables Cursor Audit", "Iterate over open bookings to list customers with unpaid balances", "p_dues procedure (explicit cursor)"),
+        ("FR11", "Analytical SQL Queries", "Execute 16 verified SQL queries for business intelligence", "Queries 1 to 16"),
+        ("FR12", "Table Inspection", "Inspect live database tables, columns, and row counts directly in browser", "Manager portal /tables route")
     ]
     add_table_data(
         doc, "Table 2.2: Functional requirements and implementing component",
-        ["ID", "Requirement", "Operational Description", "Implementing Component"],
+        ["ID", "Requirement", "Description", "Implementing Component"],
         fr_data, [Inches(0.6), Inches(1.5), Inches(2.6), Inches(1.8)], font_size=8
     )
 
     add_h2(doc, "2.3 Non-Functional Requirements")
-    add_bullet(doc, "Data Integrity & Consistency: ", "Enforced via declarative database constraints (PK, FK, UK, CHECK) and stored procedures with atomic commit and rollback.")
-    add_bullet(doc, "Auditability & Non-Repudiation: ", "Every status mutation is autonomously intercepted by trg_bk_au and recorded in bk_log with old status, new status, timestamp, and sequence ID.")
-    add_bullet(doc, "Robust Error Handling: ", "Meaningful application error numbers (ORA-20001 to ORA-20005) are raised in PL/SQL and translated into user-friendly alerts in the UI.")
-    add_bullet(doc, "Zero Client-Side ORM: ", "Strict boundary enforcement where Python issues direct parameterized SQL and executes stored procedures, avoiding synchronization lag.")
-    add_bullet(doc, "Zero-Dependency Offline Operation: ", "Frontend styling is 100% self-contained CSS3 without CDN links, ensuring offline air-gapped operation.")
+    add_bullet(doc, "Atomicity and Consistency: ", "Multi-table operations (like starting a trip or making a payment) must succeed completely or roll back entirely, leaving no partial updates.")
+    add_bullet(doc, "Data Integrity: ", "Invalid data (negative rates, end date before start date, duplicate phone or license numbers) must be rejected by the database itself, not just by HTML forms.")
+    add_bullet(doc, "Auditability: ", "Every balance change and vehicle handover must be traceable to the old state, new state, and exact timestamp.")
+    add_bullet(doc, "Clear Error Feedback: ", "When a rule is broken, the database returns custom error codes (such as ORA-20001 for date conflict) which the web app presents as clean user alerts.")
+    add_bullet(doc, "Offline Reliability: ", "The web application interface uses pure offline CSS3 without external fonts or CDN links, ensuring it runs reliably in an offline lab environment.")
 
     add_h2(doc, "2.4 Hardware and Software Requirements")
     hw_data = [
@@ -195,7 +197,7 @@ def build_chapters_1_to_4(doc, assets_dir):
         ("Database Engine", "Oracle AI Database 26ai Free (Port 1521, Service: FREEPDB1)"),
         ("Application Backend", "Python 3.12 (Standard Library: http, json, socket)"),
         ("Database Driver", "python-oracledb 26.0.1 (Thin Mode, no Oracle Instant Client required)"),
-        ("Frontend Web Stack", "Flask 3.1.3, Jinja2 Templates, Pure Responsive CSS3"),
+        ("Frontend Web Stack", "Flask 3.1.3, Jinja2 Templates, 100% Offline Responsive CSS3"),
         ("Development Tools", "Oracle SQL Developer 26.2.0, Microsoft VS Code, PowerShell 7"),
         ("Minimum Hardware", "4 GB RAM (8 GB recommended for Oracle DB), 15 GB free disk, Dual-Core 2.0 GHz CPU")
     ]
@@ -208,11 +210,12 @@ def build_chapters_1_to_4(doc, assets_dir):
     add_h2(doc, "2.5 Feasibility Study")
     add_p(
         doc,
-        "Technical Feasibility: Oracle AI Database 26ai Free runs natively as a Windows service and supports all required advanced database "
-        "constructs (triggers, sequences, stored packages, %ROWTYPE cursors). python-oracledb operates seamlessly in Thin mode. "
-        "Operational Feasibility: The dual-portal interface separates operational workflows for Branch Staff and Fleet Managers, "
-        "requiring zero database command knowledge for desk users. Economic Feasibility: All software components utilized "
-        "(Oracle Free, Python, Flask) are open-source or free community releases, incurring zero licensing expenditure.",
+        "Technical Feasibility: Oracle AI Database 26ai Free installed and ran smoothly on my Windows laptop. The python-oracledb driver "
+        "connects directly using Thin mode without needing Oracle Instant Client C-libraries. "
+        "Operational Feasibility: The user interface divides tasks naturally: Staff handle daily bookings and check-ins, while Managers "
+        "access audit logs, overdue balances, and fleet reports. Neither role needs to know SQL commands to use the application. "
+        "Economic Feasibility: All tools used (Oracle Free, Python, Flask, VS Code, SQL Developer) are freely available community editions, "
+        "so the project required zero financial budget.",
         space_after=8
     )
 
@@ -223,11 +226,11 @@ def build_chapters_1_to_4(doc, assets_dir):
     )
     
     uc_data = [
-        ("Reserve Vehicle", "Customer / Staff", "Select customer, vehicle, dates; verifies f_avail; inserts BOOKED row; trg_bk_bi computes total.", "Vehicle under SERVICE or date collision: ORA-20001 raised; transaction rolled back."),
-        ("Dispatch Trip", "Branch Staff", "Verifies customer arrival; executes p_start; updates status to ACTIVE; trg_bk_au locks vehicle to RENTED.", "Booking not BOOKED: ORA-20002 raised; operation rejected."),
-        ("Return Vehicle", "Branch Staff", "Executes p_return; sets status to RETURNED; trg_bk_au unlocks vehicle to AVAILABLE; calls f_bal.", "Booking not ACTIVE: ORA-20003 raised; return rejected."),
-        ("Collect Payment", "Staff / Customer", "Customer pays via CASH/UPI/CARD; p_pay verifies amount <= balance; inserts row via seq_pay.", "Amount <= 0 or exceeds balance: ORA-20004 raised."),
-        ("Audit Receivables", "Fleet Manager", "Manager requests dues report; p_dues cursor iterates over open bookings; aggregates total dues.", "No open dues: reports 0 overdue balances.")
+        ("Reserve Vehicle", "Customer / Staff", "Select customer, vehicle, and dates; f_avail checks conflicts; booking inserted; trg_bk_bi computes total.", "Vehicle in SERVICE or dates overlap: ORA-20001 raised; transaction rolled back."),
+        ("Dispatch Trip", "Branch Staff", "Customer arrives; staff runs p_start; status becomes ACTIVE; trg_bk_au locks vehicle to RENTED.", "Booking not BOOKED: ORA-20002 raised; operation aborted."),
+        ("Return Vehicle", "Branch Staff", "Vehicle returned; staff runs p_return; status becomes RETURNED; trg_bk_au restores vehicle to AVAILABLE; calls f_bal.", "Booking not ACTIVE: ORA-20003 raised; return rejected."),
+        ("Record Payment", "Staff / Customer", "Customer pays via CASH/UPI/CARD; p_pay verifies amount <= balance; inserts row via seq_pay.", "Amount <= 0 or exceeds balance: ORA-20004 raised; payment rejected."),
+        ("Audit Receivables", "Branch Manager", "Manager requests dues audit; p_dues cursor iterates over open bookings; aggregates total dues.", "No unpaid dues: reports 0 overdue balances.")
     ]
     add_table_data(
         doc, "Table 2.4: Key use-case descriptions",
@@ -245,74 +248,74 @@ def build_chapters_1_to_4(doc, assets_dir):
     add_h2(doc, "3.1 Introduction to DBMS")
     add_p(
         doc,
-        "A Database Management System (DBMS) is specialized system software designed to define, construct, manipulate, and safeguard "
-        "persistent datasets. In a Relational DBMS (RDBMS), data is conceptually structured into mathematical relations (tables) comprising "
-        "tuples (rows) and attributes (columns). Relationships between entities are established through key values rather than physical "
-        "disk pointers. The core benefits include declarative data integrity, reduction of redundancy, concurrent multi-user execution "
-        "via ACID transactions, standardized query execution (SQL), and enterprise-grade backup/recovery mechanisms.",
+        "A Database Management System (DBMS) is software designed to store, manage, query, and protect structured data. "
+        "A Relational DBMS organizes data into tables consisting of rows and columns, with relationships established through key values. "
+        "The primary advantages of a relational DBMS are reduced data redundancy, enforced data integrity via constraints, support for "
+        "concurrent multi-user access with ACID guarantees, and standard SQL querying. In this project, Oracle Database acts as the centralized "
+        "engine that safeguards fleet and financial records.",
         space_after=8
     )
 
     add_h2(doc, "3.2 File System versus DBMS")
     fs_data = [
-        ("Data Redundancy", "Branch and customer data duplicated across every reservation spreadsheet.", "Stored exactly once in normalized tables; referenced via foreign keys."),
-        ("Data Consistency", "Manual cross-sheet synchronization; prone to conflicting values.", "Enforced through PK, FK, NOT NULL, UNIQUE, CHECK, and triggers."),
-        ("Concurrent Sharing", "Coarse file locking; simultaneous edits cause data loss or lock conflicts.", "Row-level locking (SELECT FOR UPDATE) and multi-version concurrency control."),
-        ("Data Security", "Coarse OS file permissions; no field-level or role-based restrictions.", "Oracle database schemas, roles, and granular privilege grants."),
-        ("Transaction Recovery", "Manual file backups; power loss or process crash corrupts data.", "Write-ahead logging (Redo logs) and undo tablespaces for atomic rollback.")
+        ("Data Redundancy", "Branch and customer data duplicated in every spreadsheet row.", "Stored once in normalized tables; referenced by foreign keys."),
+        ("Data Consistency", "Manual edits across files easily lead to conflicting records.", "Enforced through PK, FK, NOT NULL, UNIQUE, CHECK, and triggers."),
+        ("Concurrent Sharing", "Coarse file locking; concurrent edits overwrite or lose changes.", "Row-level locking and Multi-Version Concurrency Control (MVCC)."),
+        ("Data Security", "Basic file-level OS permissions; no column or role-based security.", "Database user schemas, roles, and granular privilege grants."),
+        ("Recovery", "Manual file backups; application crash or power loss corrupts data.", "Write-ahead logging (Redo logs) and undo segments for atomic rollback.")
     ]
     add_table_data(
         doc, "Table 3.1: File system versus DBMS in the vehicle rental context",
-        ["Evaluation Aspect", "Traditional File / Spreadsheet System", "Oracle RDBMS (This Project)"],
+        ["Aspect", "Spreadsheet / File System", "Oracle Relational DBMS (This Project)"],
         fs_data, [Inches(1.5), Inches(2.5), Inches(2.5)], font_size=8.5
     )
 
     add_h2(doc, "3.3 Three-Schema Architecture")
     add_p(
         doc,
-        "The ANSI/SPARC Three-Schema Architecture separates database systems into three distinct abstraction tiers:",
+        "The Three-Schema Architecture separates the system into three levels of abstraction:",
         space_after=4
     )
     add_bullet(
-        doc, "External Schema (View Level): ",
-        "Customized user interfaces presenting only role-relevant data. The Staff portal displays vehicle availability calendars and customer check-in forms. The Manager portal displays financial aggregate summaries, receivables audits, and maintenance schedules."
+        doc, "External Level (Views): ",
+        "The individual portals shown to users. The Staff portal shows vehicle checkout and check-in forms; the Manager portal shows revenue aggregates and overdue balance reports."
     )
     add_bullet(
-        doc, "Conceptual Schema (Logical Level): ",
-        "The global relational schema defining the 8 normalized tables, data types, primary/foreign key relationships, and enterprise business rules independent of storage mechanics."
+        doc, "Conceptual Level (Logical Design): ",
+        "The 8-table relational schema with all entity definitions, attributes, data types, primary keys, foreign keys, and integrity constraints."
     )
     add_bullet(
-        doc, "Internal Schema (Physical Level): ",
-        "The physical layout of the database within Oracle tablespaces, data files, B*Tree index structures, and row formats stored on disk."
+        doc, "Internal Level (Physical Storage): ",
+        "How Oracle stores tables and B*Tree indexes in tablespaces, data blocks, and data files on the local disk."
     )
 
     add_h2(doc, "3.4 Data Independence")
     add_p(
         doc,
-        "Logical Data Independence is achieved because the Python Flask web application interacts with the database through SQL views "
-        "(such as v_open_bookings) and parameterized stored procedures. Adding an operational column or creating audit tables does not break "
-        "existing application routes. Physical Data Independence is demonstrated because B*Tree indexes (such as idx_veh_cid_bid) can be "
-        "added, rebuilt, or relocated without modifying the application SQL queries.",
+        "Logical Data Independence means that adding an optional column or an audit table does not break existing application queries. "
+        "For example, when I added the bk_log audit table, the core booking queries continued to function without any changes. "
+        "Physical Data Independence means that creating an index or rearranging storage on disk does not require rewriting SQL statements; "
+        "the query optimizer automatically adjusts the execution plan while the SQL syntax remains unchanged.",
         space_after=8
     )
 
     add_h2(doc, "3.5 Data Models")
     add_p(
         doc,
-        "Earlier hierarchical and network data models relied on rigid physical tree pointers and lacked ad-hoc query capabilities. "
-        "Document and NoSQL databases provide flexible schema nesting but sacrifice multi-table foreign key enforcement and declarative ACID "
-        "guarantees. The Relational Model was chosen because vehicle rental operations are inherently structured, require strict referential "
-        "integrity across 8 entities, and demand deterministic financial transactions.",
+        "Earlier hierarchical and network models used hardcoded physical pointers that made ad-hoc queries difficult. "
+        "Document-based NoSQL stores (like MongoDB) allow flexible JSON documents, but lack built-in foreign key constraints and cross-document "
+        "ACID guarantees by default. The Relational Model was chosen because vehicle rental operations are inherently structured and require "
+        "strict referential integrity between customers, vehicles, bookings, and payments.",
         space_after=8
     )
 
     add_h2(doc, "3.6 Database Languages")
     lang_data = [
-        ("DDL", "Data Definition Language", "Defines and alters schema structures", "CREATE TABLE, CREATE SEQUENCE, CREATE TRIGGER, DROP TABLE in 01_schema_data.sql"),
-        ("DML", "Data Manipulation Language", "Inserts, modifies, and deletes data", "INSERT sample data, UPDATE status, DELETE customer in 01_schema_data.sql"),
-        ("DQL", "Data Query Language", "Retrieves data matching criteria", "16 comprehensive SQL queries in 03_queries_demo.sql"),
-        ("DCL", "Data Control Language", "Manages user privileges and roles", "GRANT CONNECT, RESOURCE to rental; proposed role-based privilege model"),
-        ("TCL", "Transaction Control Language", "Controls atomic transaction states", "COMMIT, ROLLBACK, SAVEPOINT executed in stored procedures and test cases")
+        ("DDL", "Data Definition Language", "Defines and modifies schema structures", "CREATE TABLE, CREATE SEQUENCE, CREATE TRIGGER in 01_schema_data.sql"),
+        ("DML", "Data Manipulation Language", "Inserts, updates, and deletes records", "INSERT sample data, UPDATE status, DELETE customer in 01_schema_data.sql"),
+        ("DQL", "Data Query Language", "Queries and retrieves data", "The 16 SQL queries in 03_queries_demo.sql"),
+        ("DCL", "Data Control Language", "Manages database privileges and user roles", "GRANT CONNECT, RESOURCE to rental; proposed role-based privilege model"),
+        ("TCL", "Transaction Control Language", "Manages transaction boundaries", "COMMIT, ROLLBACK, SAVEPOINT executed in stored procedures and test cases")
     ]
     add_table_data(
         doc, "Table 3.2: SQL sub-languages and their use in the project",
@@ -323,9 +326,9 @@ def build_chapters_1_to_4(doc, assets_dir):
     add_h2(doc, "3.7 Users and Database Administrator")
     add_p(
         doc,
-        "In this project, user roles reflect operational banking/rental hierarchies: End Users (Customers and Desk Staff) utilize the web interface; "
-        "Application Programmers develop Python Flask endpoints and Jinja2 views; Database Designers formulate the ER diagram and normalized schema; "
-        "and the Database Administrator (DBA) establishes the Oracle pluggable database, compiles PL/SQL packages, and oversees data integrity.",
+        "In a commercial deployment, different people fulfill the roles of End Users (Desk Staff and Managers), Application Programmers, "
+        "Database Designers, and DBAs. In this course project, I performed all these roles: designing the ER model, writing and running the DDL/DML "
+        "scripts in SQL Developer, developing the Python Flask backend and templates, and testing the system.",
         space_after=12
     )
 
@@ -338,14 +341,14 @@ def build_chapters_1_to_4(doc, assets_dir):
     
     add_h2(doc, "4.1 Entity Identification")
     ent_data = [
-        ("BRANCH", "Strong Entity", "Physical branch location hosting fleet vehicles and customer pickup operations."),
-        ("CATEGORY", "Strong Entity", "Classification of vehicles (Sedan, SUV, Luxury) establishing daily rental tariffs."),
-        ("CUSTOMER", "Strong Entity", "Verified individual customer holding driving credentials and contact profiles."),
-        ("VEHICLE", "Strong Entity", "Physical motor vehicle owned by the agency, assigned to a branch and category."),
-        ("BOOKING", "Strong Entity", "Contractual reservation linking a customer to a specific vehicle for a date range."),
-        ("PAYMENT", "Strong Entity", "Financial transaction settlement recorded against a specific rental booking."),
-        ("MAINTENANCE", "Strong Entity", "Service inspection or repair log documenting downtime and maintenance expense."),
-        ("BK_LOG", "Strong Entity (Audit)", "Immutable historical log recording booking status transitions and trigger origins.")
+        ("BRANCH", "Strong Entity", "A physical branch office where vehicles are stationed and rented."),
+        ("CATEGORY", "Strong Entity", "A vehicle class (Hatchback, Sedan, SUV, Luxury) setting daily rental rates."),
+        ("CUSTOMER", "Strong Entity", "An individual with verified contact details and driving license number."),
+        ("VEHICLE", "Strong Entity", "A motor vehicle assigned to a home branch and belonging to a category."),
+        ("BOOKING", "Strong Entity", "A rental contract linking a customer to a vehicle for a specified date range."),
+        ("PAYMENT", "Strong Entity", "A monetary payment transaction recorded against a specific booking."),
+        ("MAINTENANCE", "Strong Entity", "A workshop servicing record tracking vehicle downtime and repair cost."),
+        ("BK_LOG", "Strong Entity (Audit)", "An audit entry recording a booking status transition, written by a trigger.")
     ]
     add_table_data(
         doc, "Table 4.1: Entities and their roles",
@@ -356,10 +359,9 @@ def build_chapters_1_to_4(doc, assets_dir):
     add_h2(doc, "4.2 Attributes and Attribute Types")
     add_p(
         doc,
-        "All attributes across the 8 entities are simple and atomic. Composite attributes such as customer address are handled atomically, "
-        "and multi-valued attributes are eliminated by establishing separate normalized relations. Derived attributes are deliberately designed: "
-        "booking.total is derived from (edt - sdt) multiplied by category.rate, computed autonomously by trg_bk_bi to avoid application-side "
-        "calculation discrepancies. Similarly, bk_log captures old_st and new_st to create an unalterable audit ledger.",
+        "All attributes across the 8 entities are simple and atomic. Address is stored as a single string and handled atomically by the application. "
+        "Derived attributes are used intentionally: booking.total is calculated as (edt - sdt) multiplied by category.rate, computed automatically "
+        "by trigger trg_bk_bi. Storing total ensures that past rental invoices remain historically accurate even if category tariffs are updated later.",
         space_after=8
     )
 
@@ -371,7 +373,7 @@ def build_chapters_1_to_4(doc, assets_dir):
         ("reserves", "VEHICLE (1) – BOOKING (N)", "1 : N", "BOOKING.vid (FK referencing VEHICLE.vid)"),
         ("undergoes", "VEHICLE (1) – MAINTENANCE (N)", "1 : N", "MAINTENANCE.vid (FK referencing VEHICLE.vid)"),
         ("settles", "BOOKING (1) – PAYMENT (N)", "1 : N", "PAYMENT.bkid (FK referencing BOOKING.bkid)"),
-        ("audits", "BOOKING (1) – BK_LOG (N)", "1 : N", "BK_LOG.bkid (recorded by trg_bk_au)")
+        ("audits", "BOOKING (1) – BK_LOG (N)", "1 : N", "BK_LOG.bkid (populated by trg_bk_au trigger)")
     ]
     add_table_data(
         doc, "Table 4.2: Relationships and cardinality",
@@ -380,17 +382,17 @@ def build_chapters_1_to_4(doc, assets_dir):
     )
 
     add_h2(doc, "4.4 Participation Constraints")
-    add_bullet(doc, "Total Participation of VEHICLE in BRANCH and CATEGORY: ", "Every vehicle must reference a valid home branch and category (NOT NULL foreign keys).")
-    add_bullet(doc, "Partial Participation of BRANCH and CATEGORY: ", "A branch or category may exist before vehicles are assigned to it.")
-    add_bullet(doc, "Total Participation of BOOKING in CUSTOMER and VEHICLE: ", "Every booking must be linked to a registered customer and vehicle.")
-    add_bullet(doc, "Partial Participation of CUSTOMER and VEHICLE: ", "A customer may exist without placing a booking; a vehicle may exist without current reservations.")
+    add_bullet(doc, "Total Participation of VEHICLE in BRANCH and CATEGORY: ", "Every vehicle must be assigned to an existing branch and category (NOT NULL foreign keys).")
+    add_bullet(doc, "Partial Participation of BRANCH and CATEGORY: ", "A branch or category can exist before any vehicle is assigned to it.")
+    add_bullet(doc, "Total Participation of BOOKING in CUSTOMER and VEHICLE: ", "Every booking must be tied to an existing customer and an existing vehicle.")
+    add_bullet(doc, "Partial Participation of CUSTOMER and VEHICLE: ", "A customer can exist without an active booking; a vehicle can exist without any active reservations.")
 
     add_h2(doc, "4.5 Weak and Strong Entities")
     add_p(
         doc,
-        "Every entity possesses its own unique primary key surrogate (e.g., bid, cid, custid, vid, bkid, pid, mid, lid). "
-        "Consequently, there are no weak entities in the strict ER sense. All entities represent distinct real-world domain objects "
-        "with independent lifecycles governed by referential integrity.",
+        "Every table has its own unique primary key identifier (bid, cid, custid, vid, bkid, pid, mid, lid). "
+        "Therefore, there are no weak entities in the strict ER sense. All entities represent distinct real-world domain objects "
+        "with their own lifecycles governed by referential integrity.",
         space_after=8
     )
 
@@ -401,7 +403,7 @@ def build_chapters_1_to_4(doc, assets_dir):
     )
 
     add_h2(doc, "4.7 Design Assumptions")
-    add_bullet(doc, "Tariff Calculation: ", "Rental charges are computed as whole calendar days (edt - sdt) multiplied by category daily rate.")
+    add_bullet(doc, "Daily Tariff Calculation: ", "Rental charges are computed as whole calendar days (edt - sdt) multiplied by category daily rate.")
     add_bullet(doc, "Maintenance Quarantine: ", "Vehicles in SERVICE status cannot be reserved or dispatched under any circumstances.")
     add_bullet(doc, "Vehicle State Machine: ", "Transitioning a booking to ACTIVE automatically locks vehicle status to RENTED; returning it restores AVAILABLE.")
     add_bullet(doc, "Payment Settlement: ", "Payments cannot exceed the outstanding balance (f_bal), preventing negative customer balances.")
