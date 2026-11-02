@@ -16,7 +16,7 @@ All business rules, rate calculations, availability tracking, and audit logging 
 | Parameter | Details |
 | :--- | :--- |
 | **Course** | BCSE302L – Database Systems |
-| **Student Name** | Sarvesh |
+| **Student Name** | Sarvesh R |
 | **Registration Number** | 24BYB0081 |
 | **Faculty Guide** | Prof. THANGA MARIAPPAN L |
 | **School / Institution** | SCOPE, Vellore Institute of Technology (VIT), Vellore |

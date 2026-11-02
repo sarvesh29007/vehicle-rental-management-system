@@ -69,7 +69,7 @@ def build_front_matter(doc, assets_dir):
     r_subm.font.bold = True
     r_subm.font.color.rgb = COLOR_TEXT
 
-    r_name = p_inst.add_run("Sarvesh\n")
+    r_name = p_inst.add_run("Sarvesh R\n")
     r_name.font.name = 'Times New Roman'
     r_name.font.size = Pt(13)
     r_name.font.bold = True
@@ -104,7 +104,7 @@ def build_front_matter(doc, assets_dir):
     add_p(
         doc,
         "This is to certify that the project report entitled \"Vehicle Rental Management System\" is a bona fide "
-        "record of the work carried out by Sarvesh 24BYB0081 in partial fulfilment of the requirements "
+        "record of the work carried out by Sarvesh R 24BYB0081 in partial fulfilment of the requirements "
         "of the course Database Systems at the School of Computer Science Engineering and Information "
         "Systems, VIT, Vellore, during the academic year 2026–2027.",
         space_after=28
@@ -146,7 +146,7 @@ def build_front_matter(doc, assets_dir):
         r_sig_img = p_sig_img.add_run()
         r_sig_img.add_picture(sig_path, width=Inches(1.8))
         
-    add_p(doc, "Sarvesh", bold_prefix="Name: ", space_after=4)
+    add_p(doc, "Sarvesh R", bold_prefix="Name: ", space_after=4)
     add_p(doc, "02/11/2026", bold_prefix="Date: ", space_after=12)
 
     doc.add_page_break()

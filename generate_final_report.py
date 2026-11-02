@@ -25,7 +25,7 @@ def generate_report():
     print("==================================================================")
     print("VEHICLE RENTAL MANAGEMENT SYSTEM - PROJECT REPORT GENERATOR")
     print("Academic Year: 2026–2027 | VIT Vellore | SCOPE")
-    print("Student: Sarvesh | Reg No: 24BYB0081 | Guide: Dr. THANGA MARIAPPAN L")
+    print("Student: Sarvesh R | Reg No: 24BYB0081 | Guide: Dr. THANGA MARIAPPAN L")
     print("==================================================================")
 
     assets_dir = os.path.join(root_dir, "report_assets")

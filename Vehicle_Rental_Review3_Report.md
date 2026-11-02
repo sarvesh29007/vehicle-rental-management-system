@@ -16,7 +16,7 @@
 | :--- | :--- |
 | **Project Title** | Vehicle Rental Management System (VRMS) |
 | **Course Code & Title** | BCSE302L – Database Systems |
-| **Student Name** | Sarvesh |
+| **Student Name** | Sarvesh R |
 | **Registration Number** | 24BYB0081 |
 | **School** | School of Computer Science Engineering and Information Systems (SCOPE) |
 | **Institution** | Vellore Institute of Technology (VIT), Vellore - 632014, Tamil Nadu |
@@ -1129,4 +1129,4 @@ The Vehicle Rental Management System (VRMS) successfully implements a full-stack
 - [x] Review III Final Report (`Vehicle_Rental_Review3_Report.docx` and `.md`) generated
 
 ---
-*Report prepared by Sarvesh (Reg No: 24BYB0081), BCSE302L - Database Systems, SCOPE, VIT Vellore.*
+*Report prepared by Sarvesh R (Reg No: 24BYB0081), BCSE302L - Database Systems, SCOPE, VIT Vellore.*

@@ -63,7 +63,7 @@ def build_review2_presentation(output_path):
         footer_box = slide.shapes.add_textbox(Inches(0.8), Inches(7.08), Inches(11.7), Inches(0.35))
         tf_f = footer_box.text_frame
         pf = tf_f.paragraphs[0]
-        pf.text = "BCSE302L - Database Systems | Sarvesh (24BYB0081) | SCOPE, VIT"
+        pf.text = "BCSE302L - Database Systems | Sarvesh R (24BYB0081) | SCOPE, VIT"
         pf.font.size = Pt(9.5)
         pf.font.color.rgb = TEXT_MUTED
 
@@ -169,7 +169,7 @@ def build_review2_presentation(output_path):
     p = tfi.paragraphs[0]
     meta_row(p, "Course", "BCSE302L - Database Systems (Laboratory Project)")
     p = tfi.add_paragraph()
-    meta_row(p, "Student Name", "Sarvesh")
+    meta_row(p, "Student Name", "Sarvesh R")
     r1 = p.add_run()
     r1.text = "     |     Register Number: "
     r1.font.bold = True
@@ -1220,7 +1220,7 @@ ORDER BY uc.table_name, uc.constraint_type;
     p2.space_before = Pt(12)
 
     p3 = tf20.add_paragraph()
-    p3.text = "Open for Questions & Technical Discussion\nSarvesh (24BYB0081) | BCSE302L - Database Systems | SCOPE, VIT"
+    p3.text = "Open for Questions & Technical Discussion\nSarvesh R (24BYB0081) | BCSE302L - Database Systems | SCOPE, VIT"
     p3.font.size = Pt(13)
     p3.font.color.rgb = RGBColor(148, 163, 184)
     p3.alignment = PP_ALIGN.CENTER

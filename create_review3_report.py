@@ -1,7 +1,7 @@
 """
 Full Review III Project Report Generator (DOCX & Markdown)
 BCSE302L - Database Systems | School of Computer Science Engineering and Information Systems (SCOPE), VIT
-Student: Sarvesh | Reg No: 24BYB0081 | Faculty: THANGA MARIAPPAN L
+Student: Sarvesh R | Reg No: 24BYB0081 | Faculty: THANGA MARIAPPAN L
 """
 
 import os
@@ -153,7 +153,7 @@ def build_docx_report(output_docx_path):
     tbl_meta = doc.add_table(rows=4, cols=2)
     tbl_meta.alignment = WD_TABLE_ALIGNMENT.CENTER
     meta_data = [
-        ("Student Name", "Sarvesh"),
+        ("Student Name", "Sarvesh R"),
         ("Register Number", "24BYB0081"),
         ("Faculty In-Charge", "Prof. THANGA MARIAPPAN L"),
         ("Database & Driver Stack", "Oracle Database 26ai Free (FREEPDB1) | Python Flask | python-oracledb (Thin Mode)")
@@ -203,7 +203,7 @@ def build_docx_report(output_docx_path):
     add_p("• Project Title: Vehicle Rental Management System")
     add_p("• Course Code & Title: BCSE302L - Database Systems")
     add_p("• Academic Year & Semester: Fall Semester 2026-2027")
-    add_p("• Student Name: Sarvesh")
+    add_p("• Student Name: Sarvesh R")
     add_p("• Register Number: 24BYB0081")
     add_p("• Faculty Guide: Prof. THANGA MARIAPPAN L")
     add_p("• Department / School: School of Computer Science Engineering and Information Systems (SCOPE), VIT Vellore")
